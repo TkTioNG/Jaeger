@@ -30,9 +30,9 @@ void drawUpperLegArmor(), drawLowerLegArmor();
 void drawHead(), drawNeck(), drawTurbo(), drawChest(), drawBackArmor(), drawInnerBody(), drawPelvic();
 void drawArmLeft(), drawArmRight(), drawLowerArmCover(), drawLeftHand(), drawRightHand(), drawFinger(float fingersAngle);
 void drawLegs(), drawOneLeg(int rotateLowerLegX);
-void drawSword(), drawSwordBlade();
+void drawSword(), drawSwordBlade(), drawSword2(), drawShield();
 
-GLuint skyTexture, earthTexture, boltTexture, blueFlameTexture, redFlameTexture;
+GLuint skyTexture, earthTexture, boltTexture, blueFlameTexture, redFlameTexture, shieldStarTexture;
 GLuint eyesTexture, redTexture, turboTexture, turboOuterTexture, swordTexture;
 GLuint armourTexture, armourTexture1, armourTexture2, bodyTexture;
 GLuint skeletonTexture, skeletonTexture1, skeletonTexture2;
@@ -42,10 +42,10 @@ int texCount = 2;
 BITMAP BMP;
 HBITMAP hBMP = NULL;
 
-boolean draw_spike = false, draw_bolt = false, draw_sword = false, walking = false, stab = false, assing = false, jumping = false, flying = false;
-boolean switch_perspective = false, switch_viewpoint = false;
+boolean draw_spike = false, draw_bolt = false, draw_sword = false, draw_sword2 = false, draw_shield = false, walking = false, stab = false, chop = false;
+boolean switch_perspective = false, switch_viewpoint = false, assing = false, jumping = false, flying = false;
 
-float raise_Spike = -9.0, boltheight = 0.0, boltradius = 0.74;
+float raise_Spike = -9.0, boltheight = 0.0, boltradius = 0.74, scaleWeapon2 = 0.0;
 float headAngle1 = 180.0f;
 float fingersAngle = 150.0f;
 int boltRotate = 0, turboRotate = 0;
@@ -53,14 +53,15 @@ int rotateArmLX = 0, rotateForeArmLX = 0, rotateArmLZ = 0, rotateArmRX = 0, rota
 int rotateLegLX = 0, rotateLowerLegLX = 0, rotateLegRX = 0, rotateLowerLegRX = 0;
 int stepRotateArmLX = 10, stepRotateForeArmLX = 10, stepRotateArmLZ = 10, stepRotateArmRX = 10, stepRotateForeArmRX = 10, stepRotateArmRZ = 10;
 int stepRotateLegLX = 10, stepRotateLowerLegLX = 10, stepRotateLegRX = 10, stepRotateLowerLegRX = 10;
-int stepStab = 3;
+int stepStab = 3, stepChop = 3;
 float rotateBodyY = 0, stepRotateBodyY = 0.25, rotateAss = 0.0, stepRotateAss = 0.20, translateJumping = 0.0, stepJumping = 0.50, translateFlying = 0;
 int stepWalking = 2;
 int swordLength = 0;
 
 void reset()
 {
-	draw_spike = false, draw_bolt = false, draw_sword = false, walking = false, stab = false, assing = false, jumping = false, flying = false;
+	draw_spike = false, draw_bolt = false, draw_sword = false, draw_sword2 = false, draw_shield = false, walking = false, stab = false, chop = false;
+	assing = false, jumping = false, flying = false;
 	raise_Spike = -9.0, boltheight = 0.0, boltradius = 0.74;
 	headAngle1 = 180.0f;
 	fingersAngle = 150.0f;
@@ -69,7 +70,7 @@ void reset()
 	rotateLegLX = 0, rotateLowerLegLX = 0, rotateLegRX = 0, rotateLowerLegRX = 0;
 	stepRotateArmLX = 10, stepRotateForeArmLX = 10, stepRotateArmLZ = 10, stepRotateArmRX = 10, stepRotateForeArmRX = 10, stepRotateArmRZ = 10;
 	stepRotateLegLX = 10, stepRotateLowerLegLX = 10, stepRotateLegRX = 10, stepRotateLowerLegRX = 10;
-	stepStab = 3;
+	stepStab = 3, stepChop = 3;
 	rotateBodyY = 0, stepRotateBodyY = 0.25, rotateAss = 0.0, stepRotateAss = 0.20, translateJumping = 0.0, stepJumping = 0.50, translateFlying = 0;
 	stepWalking = 2;
 }
@@ -262,9 +263,26 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			}
 			break;
 		}
+		case 0x34:
+		{
+			draw_shield = !draw_shield;
+			draw_sword2 = !draw_sword2;
+			if (draw_shield || draw_sword2)
+			{
+				reset();
+				draw_shield = true;
+				draw_sword2 = true;
+			}
+			break;
+		}
 		case 0x35:
 		{
 			draw_sword = !draw_sword;
+			if (draw_sword)
+			{
+				reset();
+				draw_sword = true;
+			}
 			break;
 		}
 		case 0x37:
@@ -333,12 +351,12 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			break;
 		}
 		break;
-		case 'T':
+		case 'R':
 		{
 			texCount = (texCount + 1) % 3;
 			break;
 		}
-		case 'Y':
+		case 'T':
 		{
 			stab = !stab;
 			if (stab)
@@ -353,6 +371,22 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			rotateArmLZ = 0;
 			rotateArmLX = 0;
 			stepStab = 2;
+			break;
+		}
+		case 'Y':
+		{
+			chop = !chop;
+			if (chop)
+			{
+				reset();
+				chop = true;
+				draw_sword2 = true;
+				draw_shield = true;
+				rotateForeArmLX = 110;
+				rotateArmLX = 45;
+			}
+			else
+				draw_sword = false;
 			break;
 		}
 		case VK_OEM_3: // `
@@ -587,6 +621,23 @@ void drawRobot()
 			rotateBodyY += stepRotateBodyY;
 		}
 	}
+
+	if (chop)
+	{
+		if (rotateForeArmLX > 0)
+		{
+			rotateForeArmLX -= stepChop;
+			rotateBodyY -= stepRotateBodyY * 2;
+		}
+	}
+
+	if (draw_shield && draw_sword2)
+	{
+		if (scaleWeapon2 < 1.0)
+			scaleWeapon2 += 0.05;
+	}
+	else if (scaleWeapon2 > 0.0)
+		scaleWeapon2 -= 0.05;
 
 	if (assing)
 	{
@@ -2077,6 +2128,21 @@ void drawLeftHand() {
 	// draw sword
 	drawSword();
 
+	// draw sword 2
+	glPushMatrix();
+	{
+		glDisable(GL_TEXTURE_2D);
+		glTranslatef(-0.15, 0.18, 2.4);
+		glRotatef(86, 1, 0, 0);
+		glRotatef(90, 0, 1, 0);
+		glScalef(scaleWeapon2, scaleWeapon2, scaleWeapon2);
+		glScalef(0.3, 0.6, 0.3);
+		drawSword2();
+		glEnable(GL_TEXTURE_2D);
+	}
+	glPopMatrix();
+
+
 	if (flying)
 	{
 		glPushMatrix();
@@ -2176,7 +2242,262 @@ void drawSwordBlade()
 
 void drawSword2()
 {
+	glLineWidth(1.0f);
+	// draw sword head
+	glPushMatrix();
+	{
+		glBegin(GL_TRIANGLES);
+		glColor3f(0.0, 1.0, 1.0);
+		glVertex3f(-0.4, 0.1, -0.1);
+		glVertex3f(0.0, 0.7, 0.0);
+		glVertex3f(0.4, 0.1, -0.1);
+		glEnd();
 
+		glBegin(GL_TRIANGLES);
+		glColor3f(0.0, 1.0, 1.0);
+		glVertex3f(-0.4, 0.1, 0.1);
+		glVertex3f(0.0, 0.7, 0.0);
+		glVertex3f(0.4, 0.1, 0.1);
+		glEnd();
+
+		glBegin(GL_TRIANGLES);
+		glColor3f(0.0, 1.0, 1.0);
+		glVertex3f(0.4, 0.1, 0.1);
+		glVertex3f(0.0, 0.7, 0.0);
+		glVertex3f(0.4, 0.1, -0.1);
+		glEnd();
+
+		glBegin(GL_TRIANGLES);
+		glColor3f(0.0, 1.0, 1.0);
+		glVertex3f(-0.4, 0.1, 0.1);
+		glVertex3f(0.0, 0.7, 0.0);
+		glVertex3f(-0.4, 0.1, -0.1);
+		glEnd();
+
+		glBegin(GL_TRIANGLES);
+		glColor3f(1.0, 1.0, 1.0);
+		glVertex3f(-0.1, 0.1, -0.11);
+		glVertex3f(0.0, 0.7, -0.015);
+		glVertex3f(0.1, 0.1, -0.11);
+		glEnd();
+
+		glBegin(GL_TRIANGLES);
+		glColor3f(1.0, 1.0, 1.0);
+		glVertex3f(0.1, 0.1, 0.11);
+		glVertex3f(0.0, 0.7, 0.015);
+		glVertex3f(-0.1, 0.1, 0.11);
+		glEnd();
+	}
+	glPopMatrix();
+
+	// sword body
+	glPushMatrix();
+	{
+		glBegin(GL_QUADS);
+		glColor3f(0.0, 1.0, 1.0);
+		glVertex3f(-0.4, 0.1, -0.1);
+		glVertex3f(-0.4, 0.1, 0.1);
+		glVertex3f(-0.7, -3.3, 0.1);
+		glVertex3f(-0.7, -3.3, -0.1);
+		glEnd();
+
+		glBegin(GL_QUADS);
+		glColor3f(0.0, 1.0, 1.0);
+		glVertex3f(0.4, 0.1, -0.1);
+		glVertex3f(0.4, 0.1, 0.1);
+		glVertex3f(0.7, -3.3, 0.1);
+		glVertex3f(0.7, -3.3, -0.1);
+		glEnd();
+
+		glBegin(GL_QUADS);
+		glColor3f(0.0, 1.0, 1.0);
+		glVertex3f(-0.4, 0.1, 0.1);
+		glVertex3f(-0.7, -3.3, 0.1);
+		glVertex3f(0.7, -3.3, 0.1);
+		glVertex3f(0.4, 0.1, 0.1);
+		glEnd();
+
+		glBegin(GL_QUADS);
+		glColor3f(0.0, 1.0, 1.0);
+		glVertex3f(-0.4, 0.1, -0.1);
+		glVertex3f(-0.7, -3.3, -0.1);
+		glVertex3f(0.7, -3.3, -0.1);
+		glVertex3f(0.4, 0.1, -0.1);
+		glEnd();
+
+		glBegin(GL_LINE_LOOP);
+		glColor3f(0.0, 0.0, 0.0);
+		glVertex3f(-0.41, 0.11, -0.11);
+		glVertex3f(-0.71, -3.31, -0.11);
+		glVertex3f(-0.71, -3.31, 0.11);
+
+		glVertex3f(-0.41, 0.11, 0.11);
+		glVertex3f(0.0, 0.7, 0.0);
+		glEnd();
+
+		glBegin(GL_LINE_LOOP);
+		glColor3f(0.0, 0.0, 0.0);
+		glVertex3f(0.41, 0.11, -0.11);
+		glVertex3f(0.71, -3.31, -0.11);
+		glVertex3f(0.71, -3.31, 0.11);
+
+		glVertex3f(0.41, 0.11, 0.11);
+		glVertex3f(0.0, 0.7, 0.0);
+		glEnd();
+
+		glBegin(GL_LINE_LOOP);
+		glColor3f(0.0, 0.0, 0.0);
+		glVertex3f(-0.41, 0.11, 0.11);
+		glVertex3f(-0.71, -3.31, 0.11);
+		glVertex3f(0.71, -3.31, 0.11);
+		glVertex3f(0.41, 0.11, 0.11);
+		glVertex3f(0.0, 0.7, 0.0);
+		glEnd();
+
+		glBegin(GL_LINE_LOOP);
+		glColor3f(0.0, 0.0, 0.0);
+		glVertex3f(-0.41, 0.11, -0.11);
+		glVertex3f(-0.71, -3.31, -0.11);
+		glVertex3f(0.71, -3.31, -0.11);
+		glVertex3f(0.41, 0.11, -0.11);
+		glVertex3f(0.0, 0.7, 0.0);
+		glEnd();
+
+		glBegin(GL_QUADS);
+		glColor3f(1.0, 1.0, 1.0);
+		glVertex3f(-0.08, 0.1, -0.12);
+		glVertex3f(-0.2, -3.3, -0.12);
+		glVertex3f(0.2, -3.3, -0.12);
+		glVertex3f(0.1, 0.1, -0.12);
+		glEnd();
+
+		glBegin(GL_QUADS);
+		glColor3f(1.0, 1.0, 1.0);
+		glVertex3f(-0.08, 0.1, 0.12);
+		glVertex3f(-0.2, -3.3, 0.12);
+		glVertex3f(0.2, -3.3, 0.12);
+		glVertex3f(0.08, 0.1, 0.12);
+		glEnd();
+	}
+	glPopMatrix();
+
+	// sword upper handle
+	glPushMatrix();
+	{
+		glBegin(GL_QUADS);
+		glColor3f(0.8, 0.7, 0.0);
+		glVertex3f(-0.8, -3.3, -0.2);
+		glVertex3f(-0.8, -3.3, 0.2);
+		glVertex3f(0.8, -3.3, 0.2);
+		glVertex3f(0.8, -3.3, -0.2);
+		glEnd();
+
+		glBegin(GL_QUADS);
+		glColor3f(0.8, 0.7, 0.0);
+		glVertex3f(-0.8, -3.5, -0.2);
+		glVertex3f(-0.8, -3.5, 0.2);
+		glVertex3f(0.8, -3.5, 0.2);
+		glVertex3f(0.8, -3.5, -0.2);
+		glEnd();
+
+		glBegin(GL_QUADS);
+		glColor3f(0.8, 0.7, 0.0);
+		glVertex3f(-0.8, -3.3, 0.2);
+		glVertex3f(-0.8, -3.3, -0.2);
+		glVertex3f(-0.8, -3.5, -0.2);
+		glVertex3f(-0.8, -3.5, 0.2);
+		glEnd();
+
+		glBegin(GL_QUADS);
+		glColor3f(0.8, 0.7, 0.0);
+		glVertex3f(0.8, -3.3, 0.2);
+		glVertex3f(0.8, -3.3, -0.2);
+		glVertex3f(0.8, -3.5, -0.2);
+		glVertex3f(0.8, -3.5, 0.2);
+		glEnd();
+
+		glBegin(GL_QUADS);
+		glColor3f(0.8, 0.7, 0.0);
+		glVertex3f(0.8, -3.3, 0.2);
+		glVertex3f(-0.8, -3.3, 0.2);
+		glVertex3f(-0.8, -3.5, 0.2);
+		glVertex3f(0.8, -3.5, 0.2);
+		glEnd();
+
+		glBegin(GL_QUADS);
+		glColor3f(0.8, 0.7, 0.0);
+		glVertex3f(0.8, -3.3, -0.2);
+		glVertex3f(-0.8, -3.3, -0.2);
+		glVertex3f(-0.8, -3.5, -0.2);
+		glVertex3f(0.8, -3.5, -0.2);
+		glEnd();
+
+		glBegin(GL_LINE_LOOP);
+		glColor3f(0.0, 0.0, 0.0);
+		glVertex3f(-0.81, -3.31, -0.21);
+		glVertex3f(-0.81, -3.31, 0.21);
+		glVertex3f(0.81, -3.31, 0.21);
+		glVertex3f(0.81, -3.31, -0.21);
+		glEnd();
+
+		glBegin(GL_LINE_LOOP);
+		glColor3f(0.0, 0.0, 0.0);
+		glVertex3f(-0.81, -3.51, -0.21);
+		glVertex3f(-0.81, -3.51, 0.21);
+		glVertex3f(0.81, -3.51, 0.21);
+		glVertex3f(0.81, -3.51, -0.21);
+		glEnd();
+
+		glBegin(GL_LINE_LOOP);
+		glColor3f(0.0, 0.0, 0.0);
+		glVertex3f(-0.81, -3.31, 0.21);
+		glVertex3f(-0.81, -3.31, -0.21);
+		glVertex3f(-0.81, -3.51, -0.21);
+		glVertex3f(-0.81, -3.51, 0.21);
+		glEnd();
+
+		glBegin(GL_LINE_LOOP);
+		glColor3f(0.0, 0.0, 0.0);
+		glVertex3f(0.81, -3.31, 0.21);
+		glVertex3f(0.81, -3.31, -0.21);
+		glVertex3f(0.81, -3.51, -0.21);
+		glVertex3f(0.81, -3.51, 0.21);
+		glEnd();
+
+		glBegin(GL_LINE_LOOP);
+		glColor3f(0.0, 0.0, 0.0);
+		glVertex3f(0.81, -3.31, 0.21);
+		glVertex3f(-0.81, -3.31, 0.21);
+		glVertex3f(-0.81, -3.51, 0.21);
+		glVertex3f(0.81, -3.51, 0.21);
+		glEnd();
+
+		glBegin(GL_LINE_LOOP);
+		glColor3f(0.0, 0.0, 0.0);
+		glVertex3f(0.81, -3.31, -0.21);
+		glVertex3f(-0.81, -3.31, -0.21);
+		glVertex3f(-0.81, -3.51, -0.21);
+		glVertex3f(0.81, -3.51, -0.21);
+		glEnd();
+	}
+	glPopMatrix();
+
+	// sword handle
+	glPushMatrix();
+	{
+		glRotatef(90, 1.0f, 0.0f, 0.0f);
+		glTranslated(0.0, 0.0, 3.5);
+		glColor3f(0.2, 0.1, 0.0);
+		gluCylinder(mqo, 0.1f, 0.1f, 0.8f, 32, 32);
+
+		glColor3f(0.0, 0.0, 0.3);
+		gluCylinder(mqo, 0.15f, 0.15f, 0.2f, 32, 32);
+
+		glColor3f(1.0, 0.7, 0.0);
+		glTranslated(0.0, 0.0, 0.75);
+		gluCylinder(mqo, 0.15f, 0.1f, 0.2f, 32, 32);
+	}
+	glPopMatrix();
 }
 
 void drawArmRight()
@@ -2534,6 +2855,21 @@ void drawRightHand() {
 	}
 	glPopMatrix();
 
+	glPushMatrix();
+	{
+		glDisable(GL_TEXTURE_2D);
+		glTranslatef(-0.2, 0.0, 0.0);
+		glRotatef(100, 0, 1, 0);
+		glRotatef(-5, 1, 0, 0);
+		glScalef(scaleWeapon2, scaleWeapon2, scaleWeapon2);
+		glScalef(0.7, 0.7, 0.7);
+		glScalef(1.16, 1.0, 1.1);
+		drawShield();
+		glEnable(GL_TEXTURE_2D);
+	}
+	glPopMatrix();
+
+
 	if (flying)
 	{
 		glPushMatrix();
@@ -2545,6 +2881,56 @@ void drawRightHand() {
 		}
 		glPopMatrix();
 	}
+}
+
+void drawShield()
+{
+	glPushMatrix();
+	{
+		GLdouble eqn[4] = { 0.0,0.0,-1.0,0.0 };
+		glPushMatrix();
+		{
+			glClipPlane(GL_CLIP_PLANE2, eqn);
+			glEnable(GL_CLIP_PLANE2);
+			glColor3f(0.5, 0.5, 0.5);
+			glScalef(1.0f, 1.0f, 0.02f);
+			gluSphere(mqo, 2.0f, 32, 32);
+			glDisable(GL_CLIP_PLANE2);
+		}
+		glPopMatrix();
+		glClipPlane(GL_CLIP_PLANE0, eqn);
+		glEnable(GL_CLIP_PLANE0);
+		glColor3f(1.0, 0.0, 0.0);
+		glScalef(1.0f, 1.0f, 0.3f);
+		gluSphere(mqo, 2.0f, 32, 32);
+		glDisable(GL_CLIP_PLANE0);
+
+		glClipPlane(GL_CLIP_PLANE1, eqn);
+		glEnable(GL_CLIP_PLANE1);
+		glColor3f(1.0, 1.0, 1.0);
+		glTranslatef(0.0f, 0.0f, -0.2f);
+		gluSphere(mqo, 1.9f, 32, 32);
+		glDisable(GL_CLIP_PLANE1);
+
+		glClipPlane(GL_CLIP_PLANE2, eqn);
+		glEnable(GL_CLIP_PLANE2);
+		glColor3f(1.0, 0.0, 0.0);
+		glTranslatef(0.0f, 0.0f, -0.6f);
+		gluSphere(mqo, 1.5f, 32, 32);
+		glDisable(GL_CLIP_PLANE2);
+
+		glClipPlane(GL_CLIP_PLANE2, eqn);
+		glEnable(GL_CLIP_PLANE2);
+		//glColor3f(0.0, 0.0, 1.0);
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, shieldStarTexture);
+		glTranslatef(0.0f, 0.0f, -0.65f);
+		glRotatef(90, 1.00, 0.10, 0.05);
+		gluSphere(mqo, 1.0f, 32, 32);
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_CLIP_PLANE2);
+	}
+	glPopMatrix();
 }
 
 void drawTripleCover() {
@@ -4956,10 +5342,14 @@ void drawBolt()
 		if (boltheight < 25 && draw_bolt)
 		{
 			boltheight += 0.3;
+			if (rotateArmRX < 90)
+				rotateArmRX += 2;
 		}
 		else if (boltheight > 0.0 && !draw_bolt)
 		{
-			boltheight -= 0.2;
+			boltheight -= 0.3;
+			if (rotateArmRX > 0)
+				rotateArmRX -= 2;
 			glTranslatef(0, 0, 25);
 			glRotatef(180, 1, 0, 0);
 		}
@@ -5100,6 +5490,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 	swordTexture = LoadTexture("textures/stripe_texture.bmp");
 	blueFlameTexture = LoadTexture("textures/boost_flame.bmp");
 	redFlameTexture = LoadTexture("textures/boostFlame.bmp");
+	shieldStarTexture = LoadTexture("textures/shield.bmp");
 
 	armourTextureArr[0] = armourTexture;
 	armourTextureArr[1] = armourTexture1;
