@@ -22,11 +22,8 @@ float zoom = 1.0;
 
 GLuint LoadTexture(char* fileName);
 
-void setPerspective(), drawBg(), drawCube(), drawRobot(), drawSpike(), drawBolt(), drawFilledCube();
-void drawLeftLeg(), drawRightLeg(), drawSkeleton(float radius, float skeletonLength), drawBallJoint(float radius), drawHingeJoint(float radius);
-void drawThighArmor(), drawThighBone(), drawBackThighBone(), drawThighBoneConnection(), drawThighCover(), drawCover();
-void drawUpperLegJointArmor(), drawLowerLegCover(), drawLowerLegJointArmor(), drawLowerLegJointCover(), drawLeftFoot(), drawRightFoot(), drawFootCover();
-void drawUpperLegArmor(), drawLowerLegArmor();
+void setPerspective(), drawBg(), drawCube(), drawRobot(), drawSpike(), drawBolt();
+void drawSkeleton(float radius, float skeletonLength), drawBallJoint(float radius), drawHingeJoint(float radius), drawPlate();
 void drawHead(), drawNeck(), drawTurbo(), drawChest(), drawBackArmor(), drawInnerBody(), drawPelvic();
 void drawArmLeft(), drawArmRight(), drawLowerArmCover(), drawLeftHand(), drawRightHand(), drawFinger(float fingersAngle);
 void drawLegs(), drawOneLeg(int rotateLowerLegX);
@@ -46,7 +43,7 @@ boolean draw_spike = false, draw_bolt = false, draw_sword = false, draw_sword2 =
 boolean switch_perspective = false, switch_viewpoint = false, assing = false, jumping = false, flying = false;
 
 float raise_Spike = -9.0, boltheight = 0.0, boltradius = 0.74, scaleWeapon2 = 0.0;
-float headAngle1 = 180.0f;
+float headAngle = 180.0f;
 float fingersAngle = 150.0f;
 int boltRotate = 0, turboRotate = 0;
 int rotateArmLX = 0, rotateForeArmLX = 0, rotateArmLZ = 0, rotateArmRX = 0, rotateForeArmRX = 0, rotateArmRZ = 0;
@@ -63,7 +60,7 @@ void reset()
 	draw_spike = false, draw_bolt = false, draw_sword = false, draw_sword2 = false, draw_shield = false, walking = false, stab = false, chop = false;
 	assing = false, jumping = false, flying = false;
 	raise_Spike = -9.0, boltheight = 0.0, boltradius = 0.74;
-	headAngle1 = 180.0f;
+	headAngle = 180.0f;
 	fingersAngle = 150.0f;
 	boltRotate = 0, turboRotate = 0;
 	rotateArmLX = 0, rotateForeArmLX = 0, rotateArmLZ = 0, rotateArmRX = 0, rotateForeArmRX = 0, rotateArmRZ = 0;
@@ -634,10 +631,14 @@ void drawRobot()
 	if (draw_shield && draw_sword2)
 	{
 		if (scaleWeapon2 < 1.0)
+		{
 			scaleWeapon2 += 0.05;
+		}
 	}
 	else if (scaleWeapon2 > 0.0)
+	{
 		scaleWeapon2 -= 0.05;
+	}
 
 	if (assing)
 	{
@@ -817,7 +818,7 @@ void drawHead()
 				glTranslatef(0.08f, -0.10f, 0.26f);
 				glRotatef(-50.0f, 0.0f, 0.0f, 1.0f);
 				glScalef(0.12f, 0.01f, 0.015f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -826,7 +827,7 @@ void drawHead()
 				glTranslatef(0.08f, -0.10f, 0.26f);
 				glRotatef(-50.0f, 0.0f, 0.0f, 1.0f);
 				glScalef(0.12f, 0.01f, 0.015f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 		}
@@ -855,7 +856,7 @@ void drawHead()
 			glRotatef(-35.0f, 1.0f, 0.0f, 0.0f);
 			glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
 			glScalef(0.05f, 0.01f, 0.05f);
-			drawCover();
+			drawPlate();
 		}
 		glPopMatrix();
 		glPushMatrix();
@@ -863,7 +864,7 @@ void drawHead()
 			glTranslatef(0.0f, 0.16f, -0.16f);
 			glRotatef(-35.0f, 1.0f, 0.0f, 0.0f);
 			glScalef(0.07f, 0.01f, 0.04f);
-			drawCover();
+			drawPlate();
 		}
 		glPopMatrix();
 		glPushMatrix();
@@ -872,7 +873,7 @@ void drawHead()
 			glRotatef(-55.0f, 1.0f, 0.0f, 0.0f);
 			glRotatef(-65.0f, 0.0f, 0.0f, 1.0f);
 			glScalef(0.12f, 0.02f, 0.06f);
-			drawCover();
+			drawPlate();
 		}
 		glPopMatrix();
 		glPushMatrix();
@@ -882,7 +883,7 @@ void drawHead()
 			glRotatef(-55.0f, 1.0f, 0.0f, 0.0f);
 			glRotatef(-65.0f, 0.0f, 0.0f, 1.0f);
 			glScalef(0.12f, 0.02f, 0.06f);
-			drawCover();
+			drawPlate();
 		}
 		glPopMatrix();
 
@@ -892,7 +893,7 @@ void drawHead()
 			glRotatef(-45.0f, 1.0f, 0.0f, 0.0f);
 			glTranslatef(0.0f, -0.12f, 0.06f);
 			glScalef(0.15f, 0.07f, 0.10f);
-			drawCover();
+			drawPlate();
 		}
 		glPopMatrix();
 
@@ -903,7 +904,7 @@ void drawHead()
 			glRotatef(-55.0f, 1.0f, 0.0f, 0.0f);
 			glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
 			glScalef(0.06f, 0.03f, 0.08f);
-			drawCover();
+			drawPlate();
 		}
 		glPopMatrix();
 		glPushMatrix();
@@ -913,7 +914,7 @@ void drawHead()
 			glRotatef(-55.0f, 1.0f, 0.0f, 0.0f);
 			glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
 			glScalef(0.06f, 0.03f, 0.08f);
-			drawCover();
+			drawPlate();
 		}
 		glPopMatrix();
 	}
@@ -929,7 +930,7 @@ void drawHead()
 		{
 			glTranslatef(0.0, 0, 0.1);
 			glScalef(0.2, 0.5, 0.1);
-			drawFilledCube();
+			drawCube();
 		}
 		glPopMatrix();
 		glPushMatrix();
@@ -937,7 +938,7 @@ void drawHead()
 			glTranslatef(0.34, 0, 0);
 			glRotatef(25, 0, 1, 0);
 			glScalef(0.2, 0.5, 0.1);
-			drawFilledCube();
+			drawCube();
 		}
 		glPopMatrix();
 		glPushMatrix();
@@ -945,7 +946,7 @@ void drawHead()
 			glTranslatef(-0.34, 0, 0);
 			glRotatef(-25, 0, 1, 0);
 			glScalef(0.2, 0.5, 0.1);
-			drawFilledCube();
+			drawCube();
 		}
 		glPopMatrix();
 	}
@@ -1164,7 +1165,7 @@ void drawTurbo()
 			glPushMatrix();
 			{
 				glScalef(0.08f, 0.05f, 0.26f);
-				drawFilledCube();
+				drawCube();
 			}
 			glPopMatrix();
 		}
@@ -1201,7 +1202,7 @@ void drawChest()
 			glRotatef(25, 0, 1, 0);
 			glRotatef(10, 1, 0, 0);
 			glScalef(1.2, 0.6, 0.1);
-			drawCover();
+			drawPlate();
 		}
 		glPopMatrix();
 
@@ -1213,7 +1214,7 @@ void drawChest()
 			glRotatef(-25, 0, 1, 0);
 			glRotatef(10, 1, 0, 0);
 			glScalef(1.2, 0.6, 0.1);
-			drawCover();
+			drawPlate();
 		}
 		glPopMatrix();
 	}
@@ -1235,7 +1236,7 @@ void drawBackArmor() {
 				glRotatef(-20.0f, 0.0f, 1.0f, 0.0f);
 				glRotatef(15.0f, 0.0f, 0.0f, 1.0f);
 				glScalef(0.20f, 0.025f, 0.30f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 			glPushMatrix(); {
@@ -1245,7 +1246,7 @@ void drawBackArmor() {
 				glRotatef(-20.0f, 0.0f, 1.0f, 0.0f);
 				glRotatef(15.0f, 0.0f, 0.0f, 1.0f);
 				glScalef(0.20f, 0.025f, 0.30f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -1253,12 +1254,12 @@ void drawBackArmor() {
 				glTranslatef(0.0f, 0.55f, 2.0f);
 				glRotatef(20.0f, 1.0f, 0.0f, 0.0f);
 				glScalef(0.15f, 0.025f, 0.30f);
-				drawCover();
+				drawPlate();
 				glPushMatrix();
 				{
 					glTranslatef(-1.0f, 0.0f, 0.0f);
 					glScalef(0.50f, 1.0f, 0.60f);
-					drawCover();
+					drawPlate();
 
 				}
 				glPopMatrix();
@@ -1267,7 +1268,7 @@ void drawBackArmor() {
 					glScalef(-1.0f, 1.0f, 1.0f);
 					glTranslatef(-1.0f, 0.0f, 0.0f);
 					glScalef(0.50f, 1.0f, 0.60f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 			}
@@ -1285,7 +1286,7 @@ void drawBackArmor() {
 				glRotatef(-5.0f, 0.0f, 1.0f, 0.0f);
 				glRotatef(10.0f, 0.0f, 0.0f, 1.0f);
 				glScalef(0.30f, 0.025f, 0.30f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -1295,7 +1296,7 @@ void drawBackArmor() {
 				glRotatef(-35.0f, 0.0f, 1.0f, 0.0f);
 				glRotatef(20.0f, 0.0f, 0.0f, 1.0f);
 				glScalef(0.13f, 0.025f, 0.38f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -1307,7 +1308,7 @@ void drawBackArmor() {
 					glRotatef(-5.0f, 0.0f, 1.0f, 0.0f);
 					glRotatef(10.0f, 0.0f, 0.0f, 1.0f);
 					glScalef(0.30f, 0.025f, 0.30f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 				glPushMatrix();
@@ -1317,7 +1318,7 @@ void drawBackArmor() {
 					glRotatef(-35.0f, 0.0f, 1.0f, 0.0f);
 					glRotatef(20.0f, 0.0f, 0.0f, 1.0f);
 					glScalef(0.13f, 0.025f, 0.38f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 			}
@@ -1361,14 +1362,14 @@ void drawBackArmor() {
 					glRotatef(10.0f, 1.0f, 0.0f, 0.0f);
 					glRotatef(-15.0f, 0.0f, 1.0f, 0.0f);
 					glScalef(0.1f, 0.01f, 0.15f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 				glPushMatrix(); {
 					glTranslatef(0.0f, 0.15f, 0.60f);
 					glRotatef(80.0f, 0.0f, 1.0f, 0.0f);
 					glScalef(0.05f, 0.01f, 0.15f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 			}
@@ -1408,14 +1409,14 @@ void drawBackArmor() {
 						glRotatef(10.0f, 1.0f, 0.0f, 0.0f);
 						glRotatef(-15.0f, 0.0f, 1.0f, 0.0f);
 						glScalef(0.1f, 0.01f, 0.15f);
-						drawCover();
+						drawPlate();
 					}
 					glPopMatrix();
 					glPushMatrix(); {
 						glTranslatef(0.0f, 0.15f, 0.60f);
 						glRotatef(80.0f, 0.0f, 1.0f, 0.0f);
 						glScalef(0.05f, 0.01f, 0.15f);
-						drawCover();
+						drawPlate();
 					}
 					glPopMatrix();
 				}
@@ -1619,7 +1620,7 @@ void drawPelvic()
 			glPushMatrix();
 			{
 				glScalef(0.15f, 0.10f, 0.10f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -1627,7 +1628,7 @@ void drawPelvic()
 				glTranslatef(0.0f, 0.15f, -0.25f);
 				glRotatef(20.0f, 1.0f, 0.0f, 0.0f);
 				glScalef(0.10f, 0.08f, 0.30f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -1635,7 +1636,7 @@ void drawPelvic()
 				glTranslatef(0.0f, 0.35f, -0.50f);
 				glRotatef(110.0f, 1.0f, 0.0f, 0.0f);
 				glScalef(0.10f, 0.05f, 0.20f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 		}
@@ -1651,7 +1652,7 @@ void drawPelvic()
 				glRotatef(35.0f, 0.0f, 0.0f, 1.0f);
 				glRotatef(50.0f, 0.0f, 1.0f, 0.0f);
 				glScalef(0.05f, 0.05f, 0.20f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -1661,7 +1662,7 @@ void drawPelvic()
 				glRotatef(35.0f, 0.0f, 0.0f, 1.0f);
 				glRotatef(50.0f, 0.0f, 1.0f, 0.0f);
 				glScalef(0.05f, 0.05f, 0.20f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -1670,7 +1671,7 @@ void drawPelvic()
 				glRotatef(55.0f, 0.0f, 0.0f, 1.0f);
 				glRotatef(70.0f, 0.0f, 1.0f, 0.0f);
 				glScalef(0.05f, 0.025f, 0.20f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -1680,7 +1681,7 @@ void drawPelvic()
 				glRotatef(55.0f, 0.0f, 0.0f, 1.0f);
 				glRotatef(70.0f, 0.0f, 1.0f, 0.0f);
 				glScalef(0.05f, 0.025f, 0.20f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -1689,7 +1690,7 @@ void drawPelvic()
 				glRotatef(-25.0f, 0.0f, 0.0f, 1.0f);
 				glRotatef(70.0f, 0.0f, 1.0f, 0.0f);
 				glScalef(0.10f, 0.08f, 0.30f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -1699,7 +1700,7 @@ void drawPelvic()
 				glRotatef(-25.0f, 0.0f, 0.0f, 1.0f);
 				glRotatef(70.0f, 0.0f, 1.0f, 0.0f);
 				glScalef(0.10f, 0.08f, 0.30f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 		}
@@ -1713,7 +1714,7 @@ void drawPelvic()
 				glTranslatef(-0.40f, 0.55f, 0.1f);
 				glRotatef(35.0f, 1.0f, 0.0f, 0.0f);
 				glScalef(0.15f, 0.05f, 0.20f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -1722,7 +1723,7 @@ void drawPelvic()
 				glTranslatef(-0.40f, 0.55f, 0.1f);
 				glRotatef(35.0f, 1.0f, 0.0f, 0.0f);
 				glScalef(0.15f, 0.05f, 0.20f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -1730,7 +1731,7 @@ void drawPelvic()
 				glTranslatef(-0.40f, 0.25f, 0.2f);
 				glRotatef(-70.0f, 1.0f, 0.0f, 0.0f);
 				glScalef(0.10f, 0.05f, 0.10f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -1739,7 +1740,7 @@ void drawPelvic()
 				glTranslatef(-0.40f, 0.25f, 0.2f);
 				glRotatef(-70.0f, 1.0f, 0.0f, 0.0f);
 				glScalef(0.10f, 0.05f, 0.10f);
-				drawCover();
+				drawPlate();
 			}
 			glPopMatrix();
 		}
@@ -1758,7 +1759,7 @@ void drawPelvic()
 			glTranslatef(0.312, 0, 0);
 			glRotatef(25, 0, 1, 0);
 			glScalef(0.4, 0.5, 0.1);
-			drawFilledCube();
+			drawCube();
 		}
 		glPopMatrix();
 		glPushMatrix();
@@ -1766,7 +1767,7 @@ void drawPelvic()
 			glTranslatef(-0.312, 0, 0);
 			glRotatef(-25, 0, 1, 0);
 			glScalef(0.4, 0.5, 0.1);
-			drawFilledCube();
+			drawCube();
 		}
 		glPopMatrix();
 	}
@@ -2010,7 +2011,7 @@ void drawLeftHand() {
 					glTranslatef(0.10f, -0.07f, -0.05f);
 					glRotatef(-10.0f, 0.0f, 0.0f, 1.0f);
 					glScalef(0.08f, 0.01f, 0.05f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 				glPushMatrix(); {
@@ -2018,21 +2019,21 @@ void drawLeftHand() {
 					glTranslatef(0.10f, -0.07f, -0.05f);
 					glRotatef(-10.0f, 0.0f, 0.0f, 1.0f);
 					glScalef(0.08f, 0.01f, 0.05f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 
 				glPushMatrix(); {
 					glTranslatef(0.13f, 0.0f, -0.05f);
 					glScalef(0.025f, 0.07f, 0.05f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 
 				glPushMatrix(); {
 					glTranslatef(0.05f, 0.0f, -0.03f);
 					glScalef(0.06f, 0.06f, 0.02f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 
@@ -2041,7 +2042,7 @@ void drawLeftHand() {
 					glRotatef(60.0f, 1.0f, 0.0f, 0.0f);
 					glRotatef(-15.0f, 0.0f, 1.0f, 0.0f);
 					glScalef(0.16f, 0.02f, 0.07f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 				glPushMatrix(); {
@@ -2050,13 +2051,13 @@ void drawLeftHand() {
 					glRotatef(60.0f, 1.0f, 0.0f, 0.0f);
 					glRotatef(-15.0f, 0.0f, 1.0f, 0.0f);
 					glScalef(0.16f, 0.02f, 0.07f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 				glPushMatrix(); {
 					glTranslatef(-0.1f, 0.0f, -0.08f);
 					glScalef(0.10f, 0.10f, 0.02f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 			}
@@ -2066,7 +2067,7 @@ void drawLeftHand() {
 		glPushMatrix();
 		{
 			glScalef(0.05f, 0.17f, 0.17f);
-			drawCover();
+			drawPlate();
 		}
 		glPopMatrix();
 
@@ -2228,14 +2229,14 @@ void drawSwordBlade()
 	glPushMatrix();
 	{
 		glScalef(0.08f, 0.005f, 0.05f);
-		drawFilledCube();
+		drawCube();
 	}
 	glPopMatrix();
 	glPushMatrix();
 	{
 		glTranslatef(0.0f, 0.0f, 0.08f);
 		glScalef(0.10f, 0.025f, 0.03f);
-		drawFilledCube();
+		drawCube();
 	}
 	glPopMatrix();
 }
@@ -2740,7 +2741,7 @@ void drawRightHand() {
 					glTranslatef(0.10f, -0.07f, -0.05f);
 					glRotatef(-10.0f, 0.0f, 0.0f, 1.0f);
 					glScalef(0.08f, 0.01f, 0.05f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 				glPushMatrix();
@@ -2749,7 +2750,7 @@ void drawRightHand() {
 					glTranslatef(0.10f, -0.07f, -0.05f);
 					glRotatef(-10.0f, 0.0f, 0.0f, 1.0f);
 					glScalef(0.08f, 0.01f, 0.05f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 
@@ -2757,7 +2758,7 @@ void drawRightHand() {
 				{
 					glTranslatef(0.13f, 0.0f, -0.05f);
 					glScalef(0.025f, 0.07f, 0.05f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 
@@ -2765,7 +2766,7 @@ void drawRightHand() {
 				{
 					glTranslatef(0.05f, 0.0f, -0.03f);
 					glScalef(0.06f, 0.06f, 0.02f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 
@@ -2775,7 +2776,7 @@ void drawRightHand() {
 					glRotatef(60.0f, 1.0f, 0.0f, 0.0f);
 					glRotatef(-15.0f, 0.0f, 1.0f, 0.0f);
 					glScalef(0.16f, 0.02f, 0.07f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 				glPushMatrix();
@@ -2785,14 +2786,14 @@ void drawRightHand() {
 					glRotatef(60.0f, 1.0f, 0.0f, 0.0f);
 					glRotatef(-15.0f, 0.0f, 1.0f, 0.0f);
 					glScalef(0.16f, 0.02f, 0.07f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 				glPushMatrix();
 				{
 					glTranslatef(-0.1f, 0.0f, -0.08f);
 					glScalef(0.10f, 0.10f, 0.02f);
-					drawCover();
+					drawPlate();
 				}
 				glPopMatrix();
 			}
@@ -2803,7 +2804,7 @@ void drawRightHand() {
 		glPushMatrix();
 		{
 			glScalef(0.05f, 0.17f, 0.17f);
-			drawCover();
+			drawPlate();
 		}
 		glPopMatrix();
 		glPushMatrix();
@@ -2940,7 +2941,7 @@ void drawTripleCover() {
 		glRotatef(-220.0f, 0.0f, 0.0f, 1.0f);
 		glRotatef(5.0f, 1.0f, 0.0f, 0.0f);
 		glScalef(0.10f, 0.03f, 0.15f);
-		drawCover();
+		drawPlate();
 	}
 	glPopMatrix();
 
@@ -2950,7 +2951,7 @@ void drawTripleCover() {
 		glRotatef(-260.0f, 0.0f, 0.0f, 1.0f);
 		glRotatef(5.0f, 1.0f, 0.0f, 0.0f);
 		glScalef(0.10f, 0.03f, 0.15f);
-		drawCover();
+		drawPlate();
 	}
 	glPopMatrix();
 
@@ -2960,7 +2961,7 @@ void drawTripleCover() {
 		glRotatef(-310.0f, 0.0f, 0.0f, 1.0f);
 		glRotatef(5.0f, 1.0f, 0.0f, 0.0f);
 		glScalef(0.11f, 0.03f, 0.15f);
-		drawCover();
+		drawPlate();
 	}
 	glPopMatrix();
 }
@@ -3301,79 +3302,75 @@ void drawOneLeg(int rotateLowerLegX) {
 		// lower leg armour plate
 		glPushMatrix();
 		{
+			glTranslatef(0, 0.7, 0);
+			// front armour
 			glPushMatrix();
 			{
-				glTranslatef(0, 0.7, 0);
-				// front armour
 				glPushMatrix();
 				{
-					glPushMatrix();
-					{
-						glTranslatef(0.0, 0.0, 0.05);
-						glRotatef(-45, 1, 0, 0);
-						glScalef(0.4, 0.5, 0.1);
-						drawFilledCube();
-					}
-					glPopMatrix();
-					glPushMatrix();
-					{
-						glTranslatef(0.0, 0.6, 0.0);
-						glScalef(0.4, 0.5, 0.1);
-						drawFilledCube();
-					}
-					glPopMatrix();
-					glPushMatrix();
-					{
-						glTranslatef(0.0, 1.2, 0.0);
-						glRotatef(10, 1, 0, 0);
-						glScalef(0.4, 0.5, 0.1);
-						drawFilledCube();
-					}
-					glPopMatrix();
+					glTranslatef(0.0, 0.0, 0.05);
+					glRotatef(-45, 1, 0, 0);
+					glScalef(0.4, 0.5, 0.1);
+					drawCube();
 				}
 				glPopMatrix();
-
-				//right armour
 				glPushMatrix();
 				{
-					glTranslatef(0.6, 0, -0.4);
-					glRotatef(90, 0, 1, 0);
-
-					glPushMatrix(); {
-						glTranslatef(0.0, 1.2, 0.0);
-						glRotatef(-20, 0, 1, 0);
-						glScalef(0.4, 0.5, 0.1);
-						drawFilledCube();
-					} glPopMatrix();
-					glPushMatrix(); {
-						glTranslatef(0.02, 0.4, -0.05);
-						glRotatef(-10, 0, 1, 0);
-						glScalef(0.3, 0.5, 0.1);
-						drawFilledCube();
-					} glPopMatrix();
+					glTranslatef(0.0, 0.6, 0.0);
+					glScalef(0.4, 0.5, 0.1);
+					drawCube();
 				}
 				glPopMatrix();
-
-				//left armour
 				glPushMatrix();
 				{
-					glTranslatef(-0.6, 0, -0.4);
-					glRotatef(-90, 0, 1, 0);
+					glTranslatef(0.0, 1.2, 0.0);
+					glRotatef(10, 1, 0, 0);
+					glScalef(0.4, 0.5, 0.1);
+					drawCube();
+				}
+				glPopMatrix();
+			}
+			glPopMatrix();
 
-					glPushMatrix(); {
-						glTranslatef(0.0, 1.2, 0.0);
-						glRotatef(20, 0, 1, 0);
-						glScalef(0.4, 0.5, 0.1);
-						drawFilledCube();
-					}
-					glPopMatrix();
-					glPushMatrix(); {
-						glTranslatef(-0.02, 0.4, -0.05);
-						glRotatef(10, 0, 1, 0);
-						glScalef(0.3, 0.5, 0.1);
-						drawFilledCube();
-					}
-					glPopMatrix();
+			//right armour
+			glPushMatrix();
+			{
+				glTranslatef(0.6, 0, -0.4);
+				glRotatef(90, 0, 1, 0);
+
+				glPushMatrix(); {
+					glTranslatef(0.0, 1.2, 0.0);
+					glRotatef(-20, 0, 1, 0);
+					glScalef(0.4, 0.5, 0.1);
+					drawCube();
+				} glPopMatrix();
+				glPushMatrix(); {
+					glTranslatef(0.02, 0.4, -0.05);
+					glRotatef(-10, 0, 1, 0);
+					glScalef(0.3, 0.5, 0.1);
+					drawCube();
+				} glPopMatrix();
+			}
+			glPopMatrix();
+
+			//left armour
+			glPushMatrix();
+			{
+				glTranslatef(-0.6, 0, -0.4);
+				glRotatef(-90, 0, 1, 0);
+
+				glPushMatrix(); {
+					glTranslatef(0.0, 1.2, 0.0);
+					glRotatef(20, 0, 1, 0);
+					glScalef(0.4, 0.5, 0.1);
+					drawCube();
+				}
+				glPopMatrix();
+				glPushMatrix(); {
+					glTranslatef(-0.02, 0.4, -0.05);
+					glRotatef(10, 0, 1, 0);
+					glScalef(0.3, 0.5, 0.1);
+					drawCube();
 				}
 				glPopMatrix();
 			}
@@ -3469,7 +3466,7 @@ void drawOneLeg(int rotateLowerLegX) {
 				glTranslatef(0, 2.8, -0.15);
 				glRotatef(25, 1, 0, 0);
 				glScalef(0.4, 0.4, 0.1);
-				drawFilledCube();
+				drawCube();
 			}
 			glPopMatrix();
 		}
@@ -3481,71 +3478,67 @@ void drawOneLeg(int rotateLowerLegX) {
 	glPushMatrix();
 	{
 		glBindTexture(GL_TEXTURE_2D, armourTextureArr[texCount]);
+		glTranslatef(0, 3.6, 0);
+		// front armour
 		glPushMatrix();
 		{
-			glTranslatef(0, 3.6, 0);
-			// front armour
 			glPushMatrix();
 			{
-				glPushMatrix();
-				{
-					glTranslatef(0.0, 0.3, 0.0);
-					glScalef(0.4, 0.3, 0.1);
-					drawFilledCube();
-				}
-				glPopMatrix();
-				glPushMatrix();
-				{
-					glTranslatef(0.0, 0.85, 0.0);
-					glRotatef(10, 1, 0, 0);
-					glScalef(0.4, 0.3, 0.1);
-					drawFilledCube();
-				}
-				glPopMatrix();
+				glTranslatef(0.0, 0.3, 0.0);
+				glScalef(0.4, 0.3, 0.1);
+				drawCube();
 			}
 			glPopMatrix();
-
-			//right armour
 			glPushMatrix();
 			{
-				glTranslatef(0.6, 0, -0.4);
-				glRotatef(90, 0, 1, 0);
-
-				glPushMatrix(); {
-					glTranslatef(0.0, 0.8, 0.0);
-					glRotatef(-10, 0, 1, 0);
-					glScalef(0.4, 0.3, 0.1);
-					drawFilledCube();
-				} glPopMatrix();
-				glPushMatrix(); {
-					glTranslatef(0.02, 0.2, -0.05);
-					glRotatef(-2, 0, 1, 0);
-					glScalef(0.3, 0.3, 0.1);
-					drawFilledCube();
-				} glPopMatrix();
+				glTranslatef(0.0, 0.85, 0.0);
+				glRotatef(10, 1, 0, 0);
+				glScalef(0.4, 0.3, 0.1);
+				drawCube();
 			}
 			glPopMatrix();
+		}
+		glPopMatrix();
 
-			//left armour
-			glPushMatrix();
-			{
-				glTranslatef(-0.6, 0, -0.4);
-				glRotatef(-90, 0, 1, 0);
+		//right armour
+		glPushMatrix();
+		{
+			glTranslatef(0.6, 0, -0.4);
+			glRotatef(90, 0, 1, 0);
 
-				glPushMatrix(); {
-					glTranslatef(0.0, 0.8, 0.0);
-					glRotatef(10, 0, 1, 0);
-					glScalef(0.4, 0.3, 0.1);
-					drawFilledCube();
-				}
-				glPopMatrix();
-				glPushMatrix(); {
-					glTranslatef(-0.02, 0.2, -0.05);
-					glRotatef(3, 0, 1, 0);
-					glScalef(0.3, 0.3, 0.1);
-					drawFilledCube();
-				}
-				glPopMatrix();
+			glPushMatrix(); {
+				glTranslatef(0.0, 0.8, 0.0);
+				glRotatef(-10, 0, 1, 0);
+				glScalef(0.4, 0.3, 0.1);
+				drawCube();
+			} glPopMatrix();
+			glPushMatrix(); {
+				glTranslatef(0.02, 0.2, -0.05);
+				glRotatef(-2, 0, 1, 0);
+				glScalef(0.3, 0.3, 0.1);
+				drawCube();
+			} glPopMatrix();
+		}
+		glPopMatrix();
+
+		//left armour
+		glPushMatrix();
+		{
+			glTranslatef(-0.6, 0, -0.4);
+			glRotatef(-90, 0, 1, 0);
+
+			glPushMatrix(); {
+				glTranslatef(0.0, 0.8, 0.0);
+				glRotatef(10, 0, 1, 0);
+				glScalef(0.4, 0.3, 0.1);
+				drawCube();
+			}
+			glPopMatrix();
+			glPushMatrix(); {
+				glTranslatef(-0.02, 0.2, -0.05);
+				glRotatef(3, 0, 1, 0);
+				glScalef(0.3, 0.3, 0.1);
+				drawCube();
 			}
 			glPopMatrix();
 		}
@@ -3653,7 +3646,7 @@ void drawOneLeg(int rotateLowerLegX) {
 			glTranslatef(0, 2.8, -0.15);
 			glRotatef(20, 1, 0, 0);
 			glScalef(0.4, 0.3, 0.1);
-			drawFilledCube();
+			drawCube();
 		}
 		glPopMatrix();
 	}
@@ -3673,7 +3666,7 @@ void drawOneLeg(int rotateLowerLegX) {
 				glRotatef(-10, 1, 0, 0);
 				glRotatef(25, 0, 1, 0);
 				glScalef(0.4, 0.5, 0.1);
-				drawFilledCube();
+				drawCube();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -3682,7 +3675,7 @@ void drawOneLeg(int rotateLowerLegX) {
 				glRotatef(-10, 1, 0, 0);
 				glRotatef(-25, 0, 1, 0);
 				glScalef(0.4, 0.5, 0.1);
-				drawFilledCube();
+				drawCube();
 			}
 			glPopMatrix();
 		}
@@ -3698,7 +3691,7 @@ void drawOneLeg(int rotateLowerLegX) {
 				glRotatef(5, 1, 0, 0);
 				glRotatef(25, 0, 1, 0);
 				glScalef(0.4, 0.3, 0.1);
-				drawFilledCube();
+				drawCube();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -3707,7 +3700,7 @@ void drawOneLeg(int rotateLowerLegX) {
 				glRotatef(5, 1, 0, 0);
 				glRotatef(-25, 0, 1, 0);
 				glScalef(0.4, 0.3, 0.1);
-				drawFilledCube();
+				drawCube();
 			}
 			glPopMatrix();
 		}
@@ -3722,7 +3715,7 @@ void drawOneLeg(int rotateLowerLegX) {
 				glRotatef(90, 0, 1, 0);
 				glRotatef(-10, 0, 0, 1);
 				glScalef(0.4, 0.3, 0.1);
-				drawFilledCube();
+				drawCube();
 			}
 			glPopMatrix();
 			glPushMatrix();
@@ -3731,7 +3724,7 @@ void drawOneLeg(int rotateLowerLegX) {
 				glRotatef(-90, 0, 1, 0);
 				glRotatef(10, 0, 0, 1);
 				glScalef(0.4, 0.3, 0.1);
-				drawFilledCube();
+				drawCube();
 			}
 			glPopMatrix();
 		}
@@ -3740,1286 +3733,13 @@ void drawOneLeg(int rotateLowerLegX) {
 	glPopMatrix();
 }
 
-void drawLeftLeg()
-{
-	glPushMatrix();
-	{
-		float radius = 1.0f;
-		//boneLength = 1.2f;
-		drawSkeleton(radius, 1.2f);
-		glPushMatrix(); {
-			glScalef(0.95f, 1.0f, 0.70f);
-			drawUpperLegArmor();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-
-			glTranslatef(0.0f, 0.0f, 1.2f); //Switch origin to prefered rotate point.
-			drawHingeJoint(radius);
-			glPushMatrix(); {
-				glScalef(0.8f, 1.0f, 0.70f);
-				drawLowerLegJointArmor();
-			}
-			glPopMatrix();
-			glPushMatrix();
-			{
-				glRotatef(180.0f, 1.0f, 0.0f, 0.0f);
-				//boneLength = 2.2f;
-				drawSkeleton(radius, 2.2f);
-				glPushMatrix(); {
-					glTranslatef(0.0f, 0.0f, -0.3f);
-					glScalef(0.85f, 0.8f, 1.3f);
-					drawLowerLegArmor();
-				}
-				glPopMatrix();
-
-				glPushMatrix();
-				{
-					glTranslatef(0.0f, 0.0f, 2.2f);
-					drawBallJoint(radius);
-					drawLeftFoot();
-				}
-				glPopMatrix();
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-	}
-	glPopMatrix();
-	//boneLength = 2.0f;
-}
-
-void drawRightLeg()
-{
-
-}
-
-void drawUpperLegArmor() {
-	glPushMatrix();
-	{
-		drawUpperLegJointArmor();
-		drawThighArmor();
-	}
-	glPopMatrix();
-}
-
-void drawUpperLegJointArmor() {
-	glPushMatrix();
-	{
-		glColor3f(139 / 255.0f, 119 / 255.0f, 114 / 255.0f);
-
-		glBindTexture(GL_TEXTURE_2D, skeletonTextureArr[texCount]);
-		glTranslatef(0.15f, 0.0f, 0.0f);
-		glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
-
-		//supporting pole
-		gluCylinder(mqo, 1.0f / 15.0f, 1.0f / 15.0f, 0.6f, 6, stacks);
-		gluDisk(mqo, 0.0f, 1.0f / 15.0f, 6, stacks);
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, 0.0f, 0.6f);
-			gluDisk(mqo, 0.0f, 1.0f / 15.0f, 6, stacks);
-		}
-		glPopMatrix();
-
-		// big side screw
-		glPushMatrix(); {
-			glTranslatef(0.0f, 0.0f, -0.1f);
-			gluCylinder(mqo, 1.0f / 7.0f, 1.0f / 7.0f, 0.1f, 6, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 7.0f, 6, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.1f);
-				gluDisk(mqo, 0.0f, 1.0f / 7.0f, 6, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-		// inside scew
-		glPushMatrix(); {
-			glTranslatef(0.0f, 0.0f, 0.35f);
-			glScalef(1.0f, 1.2f, 1.0f);
-			gluCylinder(mqo, 1.0f / 6.0f, 1.0f / 6.0f, 0.1f, 6, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 6.0f, 6, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.1f);
-				gluDisk(mqo, 0.0f, 1.0f / 6.0f, 6, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-	}
-	glPopMatrix();
-
-	//Thigh bone joint connection
-	glPushMatrix();
-	{
-		glTranslatef(0.1f, 0.10f, 0.0f);
-		glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
-		gluCylinder(mqo, 1.0f / 20.0f, 1.0f / 20.0f, 0.4f, 4, stacks);
-	}
-	glPopMatrix();
-	glPushMatrix();
-	{
-		glTranslatef(-0.075f, 0.10f, 0.0f);
-		glRotatef(45.0f, 0.0f, 0.0f, 1.0f);
-		gluCylinder(mqo, 1.0f / 25.0f, 1.0f / 25.0f, 0.2f, 4, stacks);
-		gluDisk(mqo, 0.0f, 1.0f / 25.0f, 4, stacks);
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, 0.0f, 0.2f);
-			gluDisk(mqo, 0.0f, 1.0f / 25.0f, 4, stacks);
-		}
-		glPopMatrix();
-	}
-	glPopMatrix();
-}
-
-void drawThighArmor() {
-	glPushMatrix();
-	{
-		//draw Thigh details
-		glPushMatrix();
-		{
-			glTranslatef(0.1f, 0.15f, 0.2f);
-			drawThighBone();
-			glTranslatef(-0.2f, 0.0f, 0.0f);
-			drawThighBone();
-			drawThighBoneConnection();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(0.1f, -0.15f, 0.2f);
-			glScalef(1.1f, 1.1f, 1.2f);
-			drawBackThighBone();
-			glTranslatef(-0.2f, 0.0f, 0.0f);
-			drawBackThighBone();
-			drawThighBoneConnection();
-			glPushMatrix();
-			{
-				glColor3f(139 / 255.0f, 119 / 255.0f, 114 / 255.0f);
-
-				glBindTexture(GL_TEXTURE_2D, skeletonTextureArr[texCount]);
-				glTranslatef(0.05f, 0.1f, 1.05f);
-				glScalef(0.2f, 0.1f, 0.1f);
-				drawFilledCube();
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-
-		glPushMatrix();
-		{
-			glTranslatef(0.05f, 0.15f, 1.19f);
-			gluCylinder(mqo, 1.0f / 10.0f, 1.0f / 10.0f, 0.50f, 8, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 10.0f, 8, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.45f);
-				gluDisk(mqo, 0.0f, 1.0f / 10.0f, 8, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-
-		glPushMatrix();
-		{
-			glTranslatef(-0.20f, 0.15f, 1.19f);
-			gluCylinder(mqo, 1.0f / 10.0f, 1.0f / 10.0f, 0.50f, 8, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 10.0f, 8, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.45f);
-				gluDisk(mqo, 0.0f, 1.0f / 10.0f, 8, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(0.20f, 0.15f, 1.70f);
-			glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
-			gluCylinder(mqo, 1.0f / 12.0f, 1.0f / 12.0f, 0.55f, 8, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 12.0f, 8, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.55f);
-				gluDisk(mqo, 0.0f, 1.0f / 12.0f, 8, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-
-		//draw Thigh Cover
-		drawThighCover();
-	}
-	glPopMatrix();
-}
-
-void drawThighBone() {
-	glPushMatrix();
-	{
-		glTranslatef(-0.075f, -0.025f, -0.1f);
-		glPushMatrix();
-		{
-			glColor3f(139 / 255.0f, 119 / 255.0f, 114 / 255.0f);
-
-			glBindTexture(GL_TEXTURE_2D, skeletonTextureArr[texCount]);
-			glRotatef(45.0f, 0.0f, 0.0f, 1.0f);
-			glPushMatrix(); {
-				gluCylinder(mqo, 1.0f / 14.0f, 1.0f / 14.0f, 0.8f, 4, stacks);
-				gluDisk(mqo, 0.0f, 1.0f / 14.0f, 4, stacks);
-				glPushMatrix();
-				{
-					glTranslatef(0.0f, 0.0f, 0.8f);
-					gluDisk(mqo, 0.0f, 1.0f / 14.0f, 4, stacks);
-				}
-				glPopMatrix();
-			}
-			glPopMatrix();
-
-			glRotatef(45.0f, 0.0f, 0.0f, 1.0f);
-			glColor3f(97 / 255.0f, 99 / 255.0f, 122 / 255.0f);
-
-			glBindTexture(GL_TEXTURE_2D, armourTextureArr[texCount]);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.2f);
-				gluCylinder(mqo, 1.0f / 12.0f, 1.0f / 12.0f, 0.8f, 6, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-		glPushMatrix(); {
-			glColor3f(139 / 255.0f, 119 / 255.0f, 114 / 255.0f);
-
-			glBindTexture(GL_TEXTURE_2D, skeletonTextureArr[texCount]);
-			glTranslatef(0.06f, 0.0f, 0.0f);
-			glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
-			gluCylinder(mqo, 1.0f / 14.0f, 1.0f / 14.0f, 0.12f, 6, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 14.0f, 6, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.12f);
-				gluDisk(mqo, 0.0f, 1.0f / 14.0f, 6, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-	}
-	glPopMatrix();
-}
-
-void drawBackThighBone() {
-	glPushMatrix();
-	{
-		glTranslatef(-0.075f, -0.025f, -0.1f);
-		glPushMatrix();
-		{
-			glColor3f(139 / 255.0f, 119 / 255.0f, 114 / 255.0f);
-
-			glBindTexture(GL_TEXTURE_2D, skeletonTextureArr[texCount]);
-			glRotatef(45.0f, 0.0f, 0.0f, 1.0f);
-			glPushMatrix(); {
-				gluCylinder(mqo, 1.0 / 12.0f, 1.0 / 12.0f, 0.2f, 4, stacks);
-				gluDisk(mqo, 0.0f, 1.0 / 12.0f, 4, stacks);
-				glPushMatrix();
-				{
-					glTranslatef(0.0f, 0.0f, 0.2f);
-					gluDisk(mqo, 0.0f, 1.0 / 12.0f, 4, stacks);
-				}
-				glPopMatrix();
-			}
-			glPopMatrix();
-
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.2f);
-				gluCylinder(mqo, 1.0 / 17.0f, 1.0 / 17.0f, 0.8f, 6, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-		glPushMatrix(); {
-			glTranslatef(0.08f, 0.0f, 0.0f);
-			glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
-			gluCylinder(mqo, 1.0 / 14.0f, 1.0 / 14.0f, 0.16f, 3, stacks);
-			gluDisk(mqo, 0.0f, 1.0 / 14.0f, 6, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.16f);
-				gluDisk(mqo, 0.0f, 1.0 / 14.0f, 3, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-	}
-	glPopMatrix();
-
-}
-
-void drawThighBoneConnection() {
+void drawPlate() {
 	glPushMatrix();
 	{
 		glColor3f(97 / 255.0f, 99 / 255.0f, 122 / 255.0f);
 
 		glBindTexture(GL_TEXTURE_2D, armourTextureArr[texCount]);
-		glTranslatef(0.27f, 0.0f, 0.9f);
-		glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
-		gluCylinder(mqo, 1.0f / 10.0f, 1.0f / 10.0f, 0.50f, 6, stacks);
-		gluDisk(mqo, 0.0f, 1.0f / 10.0f, 6, stacks);
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, 0.0f, 0.50f);
-			gluDisk(mqo, 0.0f, 1.0f / 10.0f, 6, stacks);
-		}
-		glPopMatrix();
-	}
-	glPopMatrix();
-}
-
-void drawThighCover() {
-	glPushMatrix();
-	{
-		//draw outside cover		
-		glPushMatrix(); {
-			glTranslatef(0.18f, -0.05f, 0.0f);
-			glRotatef(-85.0f, 0.0f, 0.0f, 1.0f);
-			glRotatef(25.0f, 0.0f, 1.0f, 0.0f);
-			glScalef(0.25f, 0.025f, 0.35f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix(); {
-			glTranslatef(0.06f, 0.30f, 0.10f);
-			glRotatef(-50.0f, 0.0f, 0.0f, 1.0f);
-			glRotatef(5.0f, 0.0f, 1.0f, 0.0f);
-			glScalef(0.15f, 0.02f, 0.25f);
-			drawCover();
-		}
-		glPopMatrix();
-
-		glPushMatrix(); {
-			glTranslatef(0.22f, -0.08f, 0.8f);
-			glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
-			glRotatef(-10.0f, 0.0f, 1.0f, 0.0f);
-			glScalef(0.25f, 0.04f, 0.65f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix(); {
-			glTranslatef(0.12f, 0.30f, 0.90f);
-			glRotatef(-45.0f, 0.0f, 0.0f, 1.0f);
-			glRotatef(5.0f, 0.0f, 1.0f, 0.0f);
-			glScalef(0.15f, 0.02f, 0.55f);
-			drawCover();
-		}
-		glPopMatrix();
-
-		//draw inside cover
-		glPopMatrix();
-		glPushMatrix(); {
-			glTranslatef(-0.40f, 0.0f, 1.1f);
-			glRotatef(-85.0f, 0.0f, 0.0f, 1.0f);
-			glRotatef(-15.0f, 0.0f, 1.0f, 0.0f);
-			glScalef(0.15f, 0.025f, 0.45f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix(); {
-			glTranslatef(-0.32f, 0.10f, 0.5f);
-			glRotatef(-105.0f, 0.0f, 0.0f, 1.0f);
-			glRotatef(-30.0f, 0.0f, 1.0f, 0.0f);
-			glScalef(0.38f, 0.025f, 0.12f);
-			drawCover();
-		}
-		glPopMatrix();
-
-		//draw back cover		
-		glPushMatrix(); {
-			glTranslatef(-0.1f, -0.25f, 0.9f);
-			//glRotatef(-110.0f, 0.0f, 0.0f, 1.0f);
-			//glRotatef(15.0f, 0.0f, 1.0f, 0.0f);
-			glScalef(0.13f, 0.025f, 0.15f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix(); {
-			glTranslatef(-0.1f, -0.35f, 1.0f);
-			glRotatef(-15.0f, 1.0f, 0.0f, 0.0f);
-			glScalef(0.10f, 0.025f, 0.30f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix(); {
-			glTranslatef(0.10f, -0.35f, 0.8f);
-			glRotatef(25.0f, 0.0f, 0.0f, 1.0f);
-			glRotatef(-10.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(5.0f, 0.0f, 1.0f, 0.0f);
-			glScalef(0.10f, 0.025f, 0.55f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix(); {
-			glTranslatef(-0.25f, -0.30f, 0.9f);
-			glRotatef(-10.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(-65.0f, 0.0f, 0.0f, 1.0f);
-			//glRotatef(5.0f, 0.0f, 1.0f, 0.0f);
-			glScalef(0.15f, 0.025f, 0.40f);
-			drawCover();
-		}
-		glPopMatrix();
-
-		//draw front cover
-		glPushMatrix(); {
-			glTranslatef(-0.10f, 0.40f, 0.9f);
-			glRotatef(-1.0f, 1.0f, 0.0f, 0.0f);
-			glScalef(0.12f, 0.025f, 0.45f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix(); {
-			glTranslatef(0.0f, 0.40f, 1.6f);
-			glRotatef(-1.0f, 1.0f, 0.0f, 0.0f);
-			glScalef(0.12f, 0.05f, 0.25f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix(); {
-			glTranslatef(0.0f, 0.45f, 1.6f);
-			glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
-			glRotatef(-1.0f, 1.0f, 0.0f, 0.0f);
-			glScalef(0.10f, 0.02f, 0.18f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix(); {
-			glTranslatef(0.20f, 0.20f, 1.5f);
-			glRotatef(-80.0f, 0.0f, 0.0f, 1.0f);
-			glRotatef(20.0f, 0.0f, 1.0f, 0.0f);
-			glScalef(0.25f, 0.02f, 0.08f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix(); {
-			glTranslatef(-0.25f, 0.40f, 1.6f);
-			glRotatef(-130.0f, 0.0f, 0.0f, 1.0f);
-			glRotatef(-20.0f, 0.0f, 1.0f, 0.0f);
-			glScalef(0.15f, 0.02f, 0.08f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix(); {
-			glTranslatef(-0.35f, 0.20f, 1.7f);
-			glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
-			glRotatef(-20.0f, 0.0f, 1.0f, 0.0f);
-			glScalef(0.15f, 0.02f, 0.08f);
-			drawCover();
-		}
-		glPopMatrix();
-	}
-	glPopMatrix();
-}
-
-void drawLowerLegArmor() {
-	glPushMatrix();
-	{
-		glColor3f(139 / 255.0f, 119 / 255.0f, 114 / 255.0f);
-
-		glBindTexture(GL_TEXTURE_2D, skeletonTextureArr[texCount]);
-		glTranslatef(0.0f, 0.15f, 0.5f);
-		//draw joint connector
-		glPushMatrix();
-		{
-			glTranslatef(0.15f, 0.0f, 0.0f);
-			glRotatef(-30.0f, 1.0f, 0.0f, 0.0f);
-			glScalef(0.03f, 0.1f, 0.08f);
-			drawFilledCube();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(-0.15f, 0.0f, 0.0f);
-			glRotatef(-30.0f, 1.0f, 0.0f, 0.0f);
-			glScalef(0.03f, 0.1f, 0.08f);
-			drawFilledCube();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, 0.0f, 0.2f);
-			glRotatef(-30.0f, 1.0f, 0.0f, 0.0f);
-			glScalef(0.17f, 0.20f, 0.10f);
-			drawFilledCube();
-		}
-		glPopMatrix();
-
-		//draw shin details
-		glPushMatrix();
-		{
-			glTranslatef(0.2f, 0.15f, 0.4f);
-			glRotatef(15.0f, 1.0f, 0.0f, 0.0f);
-			drawBackThighBone();
-			glTranslatef(-0.2f, 0.0f, 0.0f);
-			drawBackThighBone();
-
-			glBindTexture(GL_TEXTURE_2D, skeletonTextureArr[texCount]);
-			glPushMatrix();
-			{
-				glTranslatef(0.17f, 0.0f, 0.9f);
-				glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
-				gluCylinder(mqo, 1.0f / 10.0f, 1.0f / 10.0f, 0.40f, 6, stacks);
-				gluDisk(mqo, 0.0f, 1.0f / 10.0f, 6, stacks);
-				glPushMatrix();
-				{
-					glTranslatef(0.0f, 0.0f, 0.40f);
-					gluDisk(mqo, 0.0f, 1.0f / 10.0f, 6, stacks);
-				}
-				glPopMatrix();
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(0.2f, 0.0f, 0.30f);
-			glRotatef(15.0f, 1.0f, 0.0f, 0.0f);
-			drawBackThighBone();
-			glTranslatef(-0.2f, 0.0f, 0.0f);
-			drawBackThighBone();
-		}
-		glPopMatrix();
-
-		glBindTexture(GL_TEXTURE_2D, skeletonTextureArr[texCount]);
-		//draw lower leg booster
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, -0.15f, 0.30f);
-			glRotatef(80.0f, 1.0f, 0.0f, 0.0f);
-			gluCylinder(mqo, 1.0f / 3.5f, 1.0f / 5.5f, 0.5f, 8, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 3.5f, 8, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.5f);
-				gluDisk(mqo, 0.0f, 1.0f / 5.5f, 8, stacks);
-			}
-			glPopMatrix();
-			/*
-			if (eKeyDown) {
-				glPushMatrix(); {
-					glTranslatef(0.0f, 0.0f, 0.5f);
-					glBindTexture(GL_TEXTURE_2D, boostFlame);
-					gluCylinder(mqo, 1.0f / 6.5f, 0.0f, 0.55f, slices, stacks * 2);
-				}
-				glPopMatrix();
-			}*/
-		}
-		glPopMatrix();
-		glColor3f(0.0f, 0.0f, 0.0f);
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, -0.20f, 0.30f);
-			glRotatef(85.0f, 1.0f, 0.0f, 0.0f);
-			gluCylinder(mqo, 1.0f / 9.0f, 1.0f / 9.0f, 0.5f, 8, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 9.0f, 8, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.5f);
-				gluDisk(mqo, 0.0f, 1.0f / 9.0f, 8, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-
-		glColor3f(139 / 255.0f, 119 / 255.0f, 114 / 255.0f);
-
-		glBindTexture(GL_TEXTURE_2D, skeletonTextureArr[texCount]);
-		//draw calf details
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, -0.30f, 0.30f);
-			gluCylinder(mqo, 1.0f / 7.0f, 1.0f / 7.0f, 1.0f, 6, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 7.0f, 8, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 1.0f);
-				gluDisk(mqo, 0.0f, 1.0f / 7.0f, 6, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(-0.2f, -0.40f, 0.8f);
-			glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
-			gluCylinder(mqo, 1.0f / 12.0f, 1.0f / 12.0f, 0.4f, 6, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 12.0f, 6, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.4f);
-				gluDisk(mqo, 0.0f, 1.0f / 12.0f, 6, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-		//draw lower leg ventilation holes
-		glPushMatrix();
-		{
-			glTranslatef(-0.05f, -0.40f, 1.10f);
-			glRotatef(80.0f, 1.0f, 0.0f, 0.0f);
-			glScalef(1.0f, 3.5f, 1.0f);
-			gluCylinder(mqo, 1.0f / 15.0f, 1.0f / 15.0f, 0.1f, 8, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 15.0f, 8, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.1f);
-				gluDisk(mqo, 0.0f, 1.0f / 15.0f, 8, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(0.05f, -0.40f, 1.10f);
-			glRotatef(80.0f, 1.0f, 0.0f, 0.0f);
-			glScalef(1.0f, 3.5f, 1.0f);
-			gluCylinder(mqo, 1.0f / 15.0f, 1.0f / 15.0f, 0.1f, 8, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 15.0f, 8, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.1f);
-				gluDisk(mqo, 0.0f, 1.0f / 15.0f, 8, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-		//draw lower leg cover
-		drawLowerLegCover();
-	}
-	glPopMatrix();
-}
-
-void drawLowerLegJointArmor() {
-	glPushMatrix();
-	{
-		glColor3f(139 / 255.0f, 119 / 255.0f, 114 / 255.0f);
-
-		glBindTexture(GL_TEXTURE_2D, skeletonTextureArr[texCount]);
-		glRotatef(-20.0f, 1.0f, 0.0f, 0.0f);
-		glTranslatef(0.10f, 0.0f, -0.3f);
-		glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
-		glPushMatrix();
-		{
-			glRotatef(30.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(1.0f, 1.5f, 1.0f);
-			gluCylinder(mqo, 1.0f / 4.0f, 1.0f / 4.0f, 0.2f, 10, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 4.0f, 10, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.2f);
-				gluDisk(mqo, 0.0f, 1.0f / 4.0f, 10, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, 0.0f, -0.05f);
-			gluCylinder(mqo, 1.0f / 5.0f, 1.0f / 5.0f, 0.35f, 8, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 5.0f, 8, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.35f);
-				gluDisk(mqo, 0.0f, 1.0f / 5.0f, 8, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, 0.0f, -0.12f);
-			gluCylinder(mqo, 1.0f / 7.5f, 1.0f / 7.5f, 0.6f, 8, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 7.5f, 8, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.6f);
-				gluDisk(mqo, 0.0f, 1.0f / 7.5f, 8, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-
-		glPushMatrix();
-		{
-			glTranslatef(-0.28f, 0.25f, 0.0f);
-			gluCylinder(mqo, 1.0f / 6.0f, 1.0f / 6.0f, 0.4f, 8, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 6.0f, 8, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.4f);
-				gluDisk(mqo, 0.0f, 1.0f / 6.0f, 8, stacks);
-			}
-			glPopMatrix();
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, -0.15f);
-				gluCylinder(mqo, 1.0f / 6.5f, 1.0f / 6.5f, 0.4f, 8, stacks);
-				gluDisk(mqo, 0.0f, 1.0f / 6.5f, 8, stacks);
-				glPushMatrix();
-				{
-					glTranslatef(0.0f, 0.0f, 0.4f);
-					gluDisk(mqo, 0.0f, 1.0f / 6.5f, 8, stacks);
-				}
-				glPopMatrix();
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-	}
-	glPopMatrix();
-	//draw lower leg joint cover
-	glPushMatrix();
-	{
-		drawLowerLegJointCover();
-	}
-	glPopMatrix();
-}
-
-void drawLowerLegJointCover() {
-	glPushMatrix();
-	{
-		glRotatef(180.0f, 1.0f, 0.0f, 0.0f);
-		//first
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, -0.20f, 0.02f);
-			glScalef(0.1f, 0.05f, 0.05f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(0.10f, -0.05f, 0.0f);
-			glRotatef(-15.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(80.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.1f, 0.025f, 0.05f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(-0.10f, -0.05f, 0.0f);
-			glRotatef(-15.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(-80.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.1f, 0.025f, 0.05f);
-			drawCover();
-		}
-		glPopMatrix();
-		//second
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, -0.20f, 0.12f);
-			glRotatef(30.0f, 1.0f, 0.0f, 0.0f);
-			glScalef(0.1f, 0.025f, 0.05f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(0.10f, -0.05f, 0.1f);
-			glRotatef(-15.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(70.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.15f, 0.025f, 0.04f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(-0.10f, -0.05f, 0.1f);
-			glRotatef(-15.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(-70.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.15f, 0.025f, 0.04f);
-			drawCover();
-		}
-		glPopMatrix();
-		//third
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, -0.20f, 0.22f);
-			glRotatef(30.0f, 1.0f, 0.0f, 0.0f);
-			glScalef(0.1f, 0.025f, 0.05f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(0.15f, -0.10f, 0.16f);
-			glRotatef(-35.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(70.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.15f, 0.025f, 0.04f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(-0.15f, -0.10f, 0.16f);
-			glRotatef(-35.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(-70.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.15f, 0.025f, 0.04f);
-			drawCover();
-		}
-		glPopMatrix();
-	}
-	glPopMatrix();
-}
-
-void drawLowerLegCover() {
-	glPushMatrix();
-	{
-		//draw upper knee cap
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, 0.3f, 0.3f);
-			glRotatef(15.0f, 1.0f, 0.0f, 0.0f);
-			glScalef(0.15f, 0.025f, 0.1f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(-0.20f, 0.25f, 0.28f);
-			glRotatef(15.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(55.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.08f, 0.025f, 0.1f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(-0.25f, 0.05f, 0.25f);
-			glRotatef(15.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(85.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.17f, 0.025f, 0.05f);
-			drawCover();
-		}
-		glPopMatrix();
-
-		glPushMatrix();
-		{
-			glTranslatef(0.20f, 0.25f, 0.28f);
-			glRotatef(15.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(-55.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.08f, 0.025f, 0.1f);
-			drawCover();
-		}
-		glPopMatrix();
-
-		glPushMatrix();
-		{
-			glTranslatef(0.25f, 0.0f, 0.22f);
-			glRotatef(15.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.20f, 0.025f, 0.1f);
-			drawCover();
-		}
-		glPopMatrix();
-
-		//draw lower knee cap	
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, 0.25f, 0.43f);
-			//glRotatef(15.0f, 1.0f, 0.0f, 0.0f);
-			glScalef(0.15f, 0.025f, 0.1f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(-0.25f, 0.05f, 0.37f);
-			glRotatef(15.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(70.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.25f, 0.025f, 0.1f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(0.20f, 0.25f, 0.43f);
-			glRotatef(-5.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(15.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(-50.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.08f, 0.025f, 0.1f);
-			drawCover();
-		}
-		glPopMatrix();
-
-		glPushMatrix();
-		{
-			glTranslatef(0.28f, 0.0f, 0.37f);
-			glRotatef(15.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(100.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.20f, 0.025f, 0.1f);
-			drawCover();
-		}
-		glPopMatrix();
-
-		//draw shin cover
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, 0.2f, 0.70f);
-			glRotatef(15.0f, 1.0f, 0.0f, 0.0f);
-			glScalef(0.15f, 0.025f, 0.10f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(-0.25f, 0.0f, 0.65f);
-			glRotatef(15.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(65.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.25f, 0.025f, 0.1f);
-			drawCover();
-		}
-		glPopMatrix();
-
-		glPushMatrix();
-		{
-			glTranslatef(0.25f, -0.05f, 0.675f);
-			glRotatef(15.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(-65.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.25f, 0.025f, 0.15f);
-			drawCover();
-		}
-		glPopMatrix();
-
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, 0.12f, 0.97f);
-			glScalef(0.15f, 0.025f, 0.22f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(0.2f, 0.0f, 0.97f);
-			glRotatef(115.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.15f, 0.025f, 0.22f);
-			drawCover();
-		}
-		glPopMatrix();
-
-		glPushMatrix();
-		{
-			glTranslatef(-0.2f, 0.0f, 0.97f);
-			glRotatef(65.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.15f, 0.025f, 0.22f);
-			drawCover();
-		}
-		glPopMatrix();
-
-		//draw calf cover
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, -0.65f, 0.67f);
-			glScalef(0.075f, 0.025f, 0.12f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(0.10f, -0.60f, 0.68f);
-			glRotatef(55.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.075f, 0.025f, 0.15f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(-0.10f, -0.60f, 0.68f);
-			glRotatef(-55.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.075f, 0.025f, 0.15f);
-			drawCover();
-		}
-		glPopMatrix();
-
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, -0.50f, 1.40f);
-			glScalef(0.1f, 0.05f, 0.05f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(0.15f, -0.35f, 1.15f);
-			glRotatef(-55.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(80.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.3f, 0.025f, 0.05f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(-0.15f, -0.35f, 1.15f);
-			glRotatef(-55.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(-80.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.3f, 0.025f, 0.05f);
-			drawCover();
-		}
-		glPopMatrix();
-
-		glPushMatrix();
-		{
-			glTranslatef(0.15f, -0.35f, 1.25f);
-			glRotatef(-55.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(80.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.10f, 0.025f, 0.10f);
-			drawCover();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(-0.15f, -0.35f, 1.25f);
-			glRotatef(-55.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(-80.0f, 0.0f, 0.0f, 1.0f);
-			glScalef(0.10f, 0.025f, 0.10f);
-			drawCover();
-		}
-		glPopMatrix();
-	}
-	glPopMatrix();
-}
-
-void drawLeftFoot() {
-	/*
-	if (leftToggle && legToggle) {
-		if (leftKeyDown)
-			glRotatef(leftLegAngle3ForLeft, 0.0f, 0.0f, -1.0f);
-		if (leftKeyDown)
-			glRotatef(rightLegAngle3ForLeft, 0.0f, 0.0f, 1.0f);
-		if (upKeyDown)
-			glRotatef(upLegAngle3ForLeft, -1.0f, 0.0f, 0.0f);
-		if (downKeyDown)
-			glRotatef(downLegAngle3ForLeft, 1.0f, 0.0f, 0.0f);
-	}*/
-	// draw front foot
-	glPushMatrix();
-	{
-		glTranslatef(0.0f, -0.2f, 0.0f);
-		glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-		drawSkeleton(1.0f, 0.6f);
-	}
-	glPopMatrix();
-	// draw heel
-	glPushMatrix();
-	{
-		glTranslatef(0.0f, 0.4f, 0.0f);
-		glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-		drawSkeleton(1.0f, 0.2f);
-	}
-	glPopMatrix();
-	// draw foot cover
-	drawFootCover();
-}
-
-void drawFootCover() {
-	glPushMatrix();
-	{
-		//draw front foot sole
-		glColor3f(97 / 255.0f, 99 / 255.0f, 122 / 255.0f);
-
-		glBindTexture(GL_TEXTURE_2D, armourTextureArr[texCount]);
-		glPushMatrix();
-		{
-			glScalef(4.0f, 0.9f, 1.0f);
-			glTranslatef(0.0f, -0.5f, 0.0f);
-			glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
-			glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
-			glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
-			gluCylinder(mqo, 1.0f / 14.0f, 1.0f / 10.0f, 0.4f, 4, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 14.0f, 4, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.4f);;
-				gluDisk(mqo, 0.0f, 1.0f / 10.0f, 4, stacks);
-			}
-			glPopMatrix();
-
-			glTranslatef(0.0f, 0.0f, -0.31f);
-			gluCylinder(mqo, 1.0f / 18.0f, 1.0f / 14.0f, 0.3f, 4, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 18.0f, 4, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.3f);;
-				gluDisk(mqo, 0.0f, 1.0f / 14.0f, 4, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-		glPushMatrix();
-		{
-			glTranslatef(0.15f, -0.78f, 0.0f);
-			glRotatef(-60.0f, 1.0f, 0.0f, 0.0f);
-			glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
-			gluCylinder(mqo, 1.0f / 14.0f, 1.0f / 14.0f, 0.30f, 3, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 14.0f, 3, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.30f);;
-				gluDisk(mqo, 0.0f, 1.0f / 14.0f, 3, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-
-		//draw heel sole
-		glPushMatrix();
-		{
-			glScalef(3.0f, -0.6f, 1.0f);
-			glTranslatef(0.0f, -0.5f, 0.0f);
-			glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
-			glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
-			glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
-			gluCylinder(mqo, 1.0f / 14.0f, 1.0f / 10.0f, 0.4f, 4, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 14.0f, 4, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.4f);;
-				gluDisk(mqo, 0.0f, 1.0f / 10.0f, 4, stacks);
-			}
-			glPopMatrix();
-
-			glTranslatef(0.0f, 0.0f, -0.31f);
-			gluCylinder(mqo, 1.0f / 18.0f, 1.0f / 14.0f, 0.3f, 4, stacks);
-			gluDisk(mqo, 0.0f, 1.0f / 18.0f, 4, stacks);
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, 0.0f, 0.3f);;
-				gluDisk(mqo, 0.0f, 1.0f / 14.0f, 4, stacks);
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-
-		//draw foot side
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, -0.2f, 0.0f);
-			glRotatef(30.0f, 0.0f, 0.0f, 1.0f);
-			glPushMatrix();
-			{
-				glTranslatef(0.3f, 0.0f, 0.0f);
-				glRotatef(45.0f, 0.0f, 0.0f, 1.0f);
-				glRotatef(-20.0f, 0.0f, 1.0f, 0.0f);
-				gluCylinder(mqo, 1.0f / 10.0f, 1.0f / 10.0f, 0.2f, 4, stacks);
-				gluDisk(mqo, 0.0f, 1.0f / 10.0f, 4, stacks);
-				glPushMatrix();
-				{
-					glTranslatef(0.0f, 0.0f, 0.2f);
-					gluDisk(mqo, 0.0f, 1.0f / 10.0f, 4, stacks);
-				}
-				glPopMatrix();
-			}
-			glPopMatrix();
-			glPushMatrix();
-			{
-				glTranslatef(0.27f, 0.0f, 0.0f);
-				glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
-				glRotatef(45.0f, 0.0f, 0.0f, 1.0f);
-				gluCylinder(mqo, 1.0f / 12.0f, 1.0f / 18.0f, 0.25f, 4, stacks);
-				gluDisk(mqo, 0.0f, 1.0f / 12.0f, 4, stacks);
-				glPushMatrix();
-				{
-					glTranslatef(0.0f, 0.0f, 0.25f);
-					gluDisk(mqo, 0.0f, 1.0f / 18.0f, 4, stacks);
-				}
-				glPopMatrix();
-			}
-			glPopMatrix();
-		}
-		glPopMatrix();
-
-		//draw foot top
-		glPushMatrix();
-		{
-			glTranslatef(0.0f, 0.0f, 0.0f);
-			glPushMatrix();
-			{
-				glScalef(1.5f, 0.7f, 1.0f);
-				glTranslatef(0.0f, -0.6f, 0.1f);
-				glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
-				glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
-				glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
-				gluCylinder(mqo, 1.0f / 8.0f, 1.0f / 4.0f, 0.4f, 4, stacks);
-				gluDisk(mqo, 0.0f, 1.0f / 8.0f, 4, stacks);
-				glPushMatrix();
-				{
-					glTranslatef(0.0f, 0.0f, 0.4f);;
-					gluDisk(mqo, 0.0f, 1.0f / 4.0f, 4, stacks);
-				}
-				glPopMatrix();
-
-				glTranslatef(0.0f, 0.0f, -0.31f);
-				gluCylinder(mqo, 1.0f / 11.0f, 1.0f / 8.0f, 0.3f, 4, stacks);
-				gluDisk(mqo, 0.0f, 1.0f / 11.0f, 4, stacks);
-				glPushMatrix();
-				{
-					glTranslatef(0.0f, 0.0f, 0.3f);;
-					gluDisk(mqo, 0.0f, 1.0f / 8.0f, 4, stacks);
-				}
-				glPopMatrix();
-			}
-			glPopMatrix();
-
-			glPushMatrix();
-			{
-				glTranslatef(0.0f, -0.1f, 0.20f);
-				glRotatef(-25.0f, 1.0f, 0.0f, 0.0f);
-				glPushMatrix();
-				{
-					glTranslatef(0.0f, -0.20f, 0.02f);
-					glScalef(0.15f, 0.05f, 0.15f);
-					drawCover();
-				}
-				glPopMatrix();
-				glPushMatrix();
-				{
-					glTranslatef(0.15f, -0.10f, 0.0f);
-					glRotatef(-15.0f, 1.0f, 0.0f, 0.0f);
-					glRotatef(80.0f, 0.0f, 0.0f, 1.0f);
-					glScalef(0.1f, 0.025f, 0.15f);
-					drawCover();
-				}
-				glPopMatrix();
-				glPushMatrix();
-				{
-					glTranslatef(-0.15f, -0.10f, 0.0f);
-					glRotatef(-15.0f, 1.0f, 0.0f, 0.0f);
-					glRotatef(-80.0f, 0.0f, 0.0f, 1.0f);
-					glScalef(0.1f, 0.025f, 0.15f);
-					drawCover();
-				}
-				glPopMatrix();
-			}
-			glPopMatrix();
-
-		}
-		glPopMatrix();
-	}
-	glPopMatrix();
-}
-
-void drawCover() {
-	glPushMatrix();
-	{
-		glColor3f(97 / 255.0f, 99 / 255.0f, 122 / 255.0f);
-
-		glBindTexture(GL_TEXTURE_2D, armourTextureArr[texCount]);
-		drawFilledCube();
+		drawCube();
 	}
 	glPopMatrix();
 }
@@ -5050,7 +3770,7 @@ void drawHingeJoint(float radius) {
 	glPopMatrix();
 }
 
-void drawFilledCube() {
+void drawCube() {
 	glBegin(GL_QUADS);
 	{
 		// Top Face 
@@ -5090,62 +3810,6 @@ void drawFilledCube() {
 		glTexCoord2f(0, 1); glVertex3f(-1.0f, -1.0f, 1.0f);
 	}
 	glEnd();
-}
-
-void drawCube()
-{
-	glPushMatrix();
-	glRotatef(45, 0, 1, 0);
-
-	glColor3f(1.0, 0.0, 0.0);
-	glBegin(GL_QUADS);
-	glVertex3f(-0.5, 0.5, 0.5);
-	glVertex3f(-0.5, -0.5, 0.5);
-	glVertex3f(0.5, -0.5, 0.5);
-	glVertex3f(0.5, 0.5, 0.5);
-	glEnd();
-
-	glColor3f(0.0, 1.0, 0.0);
-	glBegin(GL_QUADS);
-	glVertex3f(0.5, 0.5, 0.5);
-	glVertex3f(0.5, -0.5, 0.5);
-	glVertex3f(0.5, -0.5, -0.5);
-	glVertex3f(0.5, 0.5, -0.5);
-	glEnd();
-
-	glColor3f(0.0, 0.0, 1.0);
-	glBegin(GL_QUADS);
-	glVertex3f(0.5, 0.5, -0.5);
-	glVertex3f(0.5, -0.5, -0.5);
-	glVertex3f(-0.5, -0.5, -0.5);
-	glVertex3f(-0.5, 0.5, -0.5);
-	glEnd();
-
-	glColor3f(1.0, 1.0, 0.0);
-	glBegin(GL_QUADS);
-	glVertex3f(-0.5, 0.5, -0.5);
-	glVertex3f(-0.5, -0.5, -0.5);
-	glVertex3f(-0.5, -0.5, 0.5);
-	glVertex3f(-0.5, 0.5, 0.5);
-	glEnd();
-
-	glColor3f(1.0, 0.0, 1.0);
-	glBegin(GL_QUADS);
-	glVertex3f(-0.5, 0.5, -0.5);
-	glVertex3f(-0.5, 0.5, 0.5);
-	glVertex3f(0.5, 0.5, 0.5);
-	glVertex3f(0.5, 0.5, -0.5);
-	glEnd();
-
-	glColor3f(0.0, 1.0, 1.0);
-	glBegin(GL_QUADS);
-	glVertex3f(0.5, -0.5, 0.5);
-	glVertex3f(-0.5, -0.5, 0.5);
-	glVertex3f(-0.5, -0.5, -0.5);
-	glVertex3f(0.5, -0.5, -0.5);
-	glEnd();
-
-	glPopMatrix();
 }
 
 void drawSpike()
@@ -5388,7 +4052,7 @@ void setPerspective()
 	}
 	else
 	{
-		glOrtho(-15.0, 15.0, -15.0, 15.0, 0.0, 300.0);
+		glOrtho(-12.0, 12.0, -12.0, 12.0, 0.0, 300.0);
 	}
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
