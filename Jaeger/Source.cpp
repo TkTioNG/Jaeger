@@ -12,7 +12,7 @@
 GLUquadricObj* mqo = gluNewQuadric();
 
 int slices = 50, stacks = 50;
-float camX = 0.5, camY = 10.0, camZ = 25.0;
+float camX = 0.5, camY = 12.0, camZ = 26.0;
 float lookX = 0.0, lookY = 10, lookZ = 0.0;
 float rotateX = 0.0, rotateY = 0.0, rotateZ = 0.0;
 float translateX = 0.0, translateY = 0.0, translateZ = 0.0;
@@ -32,7 +32,7 @@ void drawArmLeft(), drawArmRight(), drawLowerArmCover(), drawLeftHand(), drawRig
 void drawLegs(), drawOneLeg(int rotateLowerLegX);
 void drawSword(), drawSwordBlade();
 
-GLuint skyTexture, earthTexture, boltTexture;
+GLuint skyTexture, earthTexture, boltTexture, blueFlameTexture, redFlameTexture;
 GLuint eyesTexture, redTexture, turboTexture, turboOuterTexture, swordTexture;
 GLuint armourTexture, armourTexture1, armourTexture2, bodyTexture;
 GLuint skeletonTexture, skeletonTexture1, skeletonTexture2;
@@ -42,7 +42,7 @@ int texCount = 2;
 BITMAP BMP;
 HBITMAP hBMP = NULL;
 
-boolean draw_spike = false, draw_bolt = false, draw_sword = false, walking = false, stab = false;
+boolean draw_spike = false, draw_bolt = false, draw_sword = false, walking = false, stab = false, assing = false, jumping = false, switch_perspective = false, switch_viewpoint = false;
 
 float raise_Spike = -9.0, boltheight = 0.0, boltradius = 0.74;
 float headAngle1 = 180.0f;
@@ -53,7 +53,7 @@ int rotateLegLX = 0, rotateLowerLegLX = 0, rotateLegRX = 0, rotateLowerLegRX = 0
 int stepRotateArmLX = 10, stepRotateForeArmLX = 10, stepRotateArmLZ = 10, stepRotateArmRX = 10, stepRotateForeArmRX = 10, stepRotateArmRZ = 10;
 int stepRotateLegLX = 10, stepRotateLowerLegLX = 10, stepRotateLegRX = 10, stepRotateLowerLegRX = 10;
 int stepStab = 3;
-float rotateBodyY = 0, stepRotateBodyY = 0.25;
+float rotateBodyY = 0, stepRotateBodyY = 0.25, rotateAss = 0.0, stepRotateAss = 0.20, translateJumping = 0.0, stepJumping = 0.50;
 int stepWalking = 2;
 int swordLength = 0;
 
@@ -75,7 +75,7 @@ void reset()
 
 void resetCam()
 {
-	camX = 0.5, camY = 10.0, camZ = 25.0;
+	camX = 0.5, camY = 12.0, camZ = 25.0;
 	lookX = 0.0, lookY = 10, lookZ = 0.0;
 	rotateX = 0.0, rotateY = 0.0, rotateZ = 0.0;
 	translateX = 0.0, translateY = 0.0, translateZ = 0.0;
@@ -354,6 +354,61 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			stepStab = 2;
 			break;
 		}
+		case VK_OEM_3: // `
+		{
+			switch_perspective = !switch_perspective;
+			setPerspective();
+			break;
+		}
+		case VK_TAB:
+		{
+			switch_viewpoint = !switch_viewpoint;
+			if (switch_viewpoint)
+			{
+				camX = -4.5;
+				camY = 16.0;
+				camZ = -8.0;
+				lookX = 0.0;
+				lookY = 10.0;
+				lookZ = 25.0;
+			}
+			else
+			{
+				camX = 0.5;
+				camY = 12.0;
+				camZ = 26.0;
+				lookX = 0.0;
+				lookY = 10.0;
+				lookZ = 0.0;
+			}
+			break;
+		}
+		case 'Z':
+		{
+			assing = !assing;
+			if (assing)
+			{
+				reset();
+				assing = true;
+				rotateForeArmLX = 90;
+				rotateForeArmRX = 90;
+				rotateArmLX = 90;
+				rotateArmRX = 90;
+				rotateArmLZ = 90;
+				rotateArmRZ = 90;
+			}	
+			break;
+		}
+		case 'X':
+		{
+			jumping = !jumping;
+			if (jumping)
+			{
+				reset();
+				jumping = true;
+			}
+			break;
+		}
 		}
 	default:
 		break;
@@ -449,7 +504,7 @@ void display()
 void drawRobot()
 {
 	glEnable(GL_TEXTURE_2D);
-
+	
 	if (walking)
 	{
 		translateZ -= 0.1;
@@ -505,16 +560,57 @@ void drawRobot()
 		if (rotateBodyY < 0)
 		{
 			rotateBodyY += stepRotateBodyY;
-			//rotateArmLX -= 5;
 		}
+	}
+
+	if (assing)
+	{
+		if (rotateAss > 3 || rotateAss < -3)
+		{
+			stepRotateAss = -stepRotateAss;
+		}
+		rotateAss += stepRotateAss;
+		if (rotateForeArmLX > 120 || rotateForeArmLX < 60)
+		{
+			stepRotateForeArmLX = -stepRotateForeArmLX;
+			stepRotateForeArmRX = -stepRotateForeArmRX;
+		}
+		rotateForeArmLX += stepRotateForeArmLX/3;
+		rotateForeArmRX += stepRotateForeArmRX/3;
+	}	
+
+	if (jumping)
+	{
+		if (rotateLegLX > 90 || rotateLegLX < 0)
+		{
+			stepRotateArmLZ = -stepRotateArmLZ;
+			stepRotateArmRZ = -stepRotateArmRZ;
+			stepRotateLegLX = -stepRotateLegLX;
+			stepRotateLegRX = -stepRotateLegRX;
+			stepRotateLowerLegLX = -stepRotateLowerLegLX;
+			stepRotateLowerLegRX = -stepRotateLowerLegRX;
+			stepJumping = -stepJumping;
+		}
+		rotateArmLZ += stepRotateArmLZ/2;
+		rotateArmRZ += stepRotateArmRZ/2;
+		rotateLegLX += stepRotateLegLX/2;
+		rotateLegRX += stepRotateLegRX/2;
+		rotateLowerLegLX += stepRotateLowerLegLX/2;
+		rotateLowerLegRX += stepRotateLowerLegRX/2;
+		translateJumping += stepJumping;
 	}
 
 	glPushMatrix();
 	{
+		if (jumping)
+			glTranslatef(0.0, -translateJumping + 3.0, -translateJumping/3);
 		glRotatef(rotateBodyY, 0, 1, 0);
 
 		glPushMatrix();
 		{
+			glTranslatef(0, 3.0, 0);
+			glRotatef(-rotateAss/3, 0, 0, 1);
+			glTranslatef(0, -3.0, 0);
 			glScalef(1.1, 1.2, 1.1);
 			drawLegs();
 		}
@@ -526,39 +622,46 @@ void drawRobot()
 
 			glPushMatrix();
 			{
-				glTranslatef(0, 1.2, 0);
+				glTranslatef(0, 9.0, 0);
+				glRotatef(rotateAss, 0, 0, 1);
+				glTranslatef(0, -9.0, 0);
+				glPushMatrix();
+				{
+					glTranslatef(0, 1.2, 0);
 
-				drawHead();
+					drawHead();
 
-				drawNeck();
+					drawNeck();
 
-				drawTurbo();
+					drawTurbo();
 
-				drawChest();
+					drawChest();
 
-				drawBackArmor();
+					drawBackArmor();
 
-				drawInnerBody();
-			}
-			glPopMatrix();
+					drawInnerBody();
+				}
+				glPopMatrix();
 
-			drawPelvic();
+				drawPelvic();
 
-			glPushMatrix();
-			{
-				glTranslatef(4.9, 0.0, -2.7);
-				glRotatef(10, 0, 0, 1);
-				glScalef(1.0, 1.2, 1.0);
-				drawArmLeft();
-			}
-			glPopMatrix();
+				glPushMatrix();
+				{
+					glTranslatef(4.9, 0.0, -2.7);
+					glRotatef(10, 0, 0, 1);
+					glScalef(1.0, 1.2, 1.0);
+					drawArmLeft();
+				}
+				glPopMatrix();
 
-			glPushMatrix();
-			{
-				glTranslatef(-4.9, 0.0, 1.0);
-				glRotatef(-10, 0, 0, 1);
-				glScalef(1.0, 1.2, 1.0);
-				drawArmRight();
+				glPushMatrix();
+				{
+					glTranslatef(-4.9, 0.0, 1.0);
+					glRotatef(-10, 0, 0, 1);
+					glScalef(1.0, 1.2, 1.0);
+					drawArmRight();
+				}
+				glPopMatrix();
 			}
 			glPopMatrix();
 		}
@@ -571,7 +674,7 @@ void drawRobot()
 	if (draw_spike || raise_Spike > -9.0)
 		drawSpike();
 
-	if (draw_bolt || boltheight >= 0.0)
+	if (draw_bolt || boltheight > 0.0)
 		drawBolt();
 
 }
@@ -1931,6 +2034,24 @@ void drawLeftHand() {
 
 	// draw sword
 	drawSword();
+
+
+	glPushMatrix();
+	{
+		glPushMatrix();
+		{
+			glPushMatrix();
+			{
+				glTranslatef(-1.1, 0.0, 0.0);
+				glRotatef(90, 0, 1, 0);
+				glBindTexture(GL_TEXTURE_2D, blueFlameTexture);
+				gluCylinder(mqo, 0.0, 0.2, 1.0, slices, stacks);
+			}
+			glPopMatrix();
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
 }
 
 void drawSword() {
@@ -2371,6 +2492,22 @@ void drawRightHand() {
 		glPopMatrix();
 	}
 	glPopMatrix();
+	glPushMatrix();
+	{
+		glPushMatrix();
+		{
+			glPushMatrix();
+			{
+				glTranslatef(1.1, 0.0, 0.0);
+				glRotatef(-90, 0, 1, 0);
+				glBindTexture(GL_TEXTURE_2D, blueFlameTexture);
+				gluCylinder(mqo, 0.0, 0.2, 1.0, slices, stacks);
+			}
+			glPopMatrix();
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
 }
 
 void drawTripleCover() {
@@ -2717,9 +2854,24 @@ void drawOneLeg(int rotateLowerLegX) {
 				glPopMatrix();
 			}
 			glPopMatrix();
+
+			// foot flame
+			glPushMatrix();
+			{
+				glTranslatef(0.0, -2.15, 0.0);
+				glPushMatrix();
+				{
+					glRotatef(-90, 1, 0, 0);
+					glBindTexture(GL_TEXTURE_2D, blueFlameTexture);
+					gluCylinder(mqo, 0.0, 0.5, 2.15, slices, stacks);
+				}
+				glPopMatrix();
+			}
+			glPopMatrix();
 		}
 		glPopMatrix();
 
+		glBindTexture(GL_TEXTURE_2D, armourTextureArr[texCount]);
 		// lower leg armour plate
 		glPushMatrix();
 		{
@@ -3178,18 +3330,6 @@ void drawLeftLeg()
 		{
 
 			glTranslatef(0.0f, 0.0f, 1.2f); //Switch origin to prefered rotate point.
-			/*
-			glRotatef(leftLegAngle2, leftLegAxis[1][0], leftLegAxis[1][1], leftLegAxis[1][2]); //Rotating joint.
-			if (leftToggle && legToggle) {
-				if (leftKeyDown)
-					glRotatef(leftLegAngle2ForLeft, 0.0f, 0.0f, -1.0f);
-				if (rightKeyDown)
-					glRotatef(rightLegAngle2ForLeft, 0.0f, 0.0f, 1.0f);
-				if (upKeyDown)
-					glRotatef(upLegAngle2ForLeft, -1.0f, 0.0f, 0.0f);
-				if (downKeyDown)
-					glRotatef(downLegAngle2ForLeft, 1.0f, 0.0f, 0.0f);
-			}*/
 			drawHingeJoint(radius);
 			glPushMatrix(); {
 				glScalef(0.8f, 1.0f, 0.70f);
@@ -3211,7 +3351,6 @@ void drawLeftLeg()
 				glPushMatrix();
 				{
 					glTranslatef(0.0f, 0.0f, 2.2f);
-					// glRotatef(leftLegAngle3, leftLegAxis[2][0], leftLegAxis[2][1], leftLegAxis[2][2]); //Rotating joint.
 					drawBallJoint(radius);
 					drawLeftFoot();
 				}
@@ -4810,10 +4949,19 @@ void drawBolt()
 }
 
 void setPerspective()
-{
+{	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45 / zoom, 1, 1, 150);
+	if (!switch_perspective)
+	{
+		gluPerspective(45 / zoom, 1, 1, 300);
+	}
+	else
+	{
+		glOrtho(-15.0, 15.0, -15.0, 15.0, 0.0, 300.0);
+	}
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }
 
 void drawBg()
@@ -4823,7 +4971,7 @@ void drawBg()
 	glPushMatrix();
 	{
 		glTranslatef(0.0, 2.5, 0.0);
-		glScalef(3.0, 3.0, 3.0);
+		glScalef(4.0, 4.0, 4.0);
 		glPushMatrix();
 		{
 			glBindTexture(GL_TEXTURE_2D, earthTexture);
@@ -4889,8 +5037,10 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 	if (!wglMakeCurrent(hdc, hglrc)) return false;
 
 	glEnable(GL_DEPTH_TEST);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 	setPerspective();
-	//glOrtho(5.0, 5.0, 5.0, 5.0, 1.0, 30.0);	
+	//glOrtho(-15.0, 15.0, -15.0, 15.0, 0.0, 150.0);	
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
@@ -4908,6 +5058,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 	skeletonTexture1 = LoadTexture("textures/moon_texture.bmp");
 	skeletonTexture2 = LoadTexture("textures/metal.bmp");
 	swordTexture = LoadTexture("textures/stripe_texture.bmp");
+	blueFlameTexture = LoadTexture("textures/boost_flame.bmp");
+	redFlameTexture = LoadTexture("textures/boostFlame.bmp");
 
 	armourTextureArr[0] = armourTexture;
 	armourTextureArr[1] = armourTexture1;
