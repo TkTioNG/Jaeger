@@ -42,7 +42,8 @@ int texCount = 2;
 BITMAP BMP;
 HBITMAP hBMP = NULL;
 
-boolean draw_spike = false, draw_bolt = false, draw_sword = false, walking = false, stab = false, assing = false, jumping = false, switch_perspective = false, switch_viewpoint = false;
+boolean draw_spike = false, draw_bolt = false, draw_sword = false, walking = false, stab = false, assing = false, jumping = false, flying = false;
+boolean switch_perspective = false, switch_viewpoint = false;
 
 float raise_Spike = -9.0, boltheight = 0.0, boltradius = 0.74;
 float headAngle1 = 180.0f;
@@ -53,13 +54,13 @@ int rotateLegLX = 0, rotateLowerLegLX = 0, rotateLegRX = 0, rotateLowerLegRX = 0
 int stepRotateArmLX = 10, stepRotateForeArmLX = 10, stepRotateArmLZ = 10, stepRotateArmRX = 10, stepRotateForeArmRX = 10, stepRotateArmRZ = 10;
 int stepRotateLegLX = 10, stepRotateLowerLegLX = 10, stepRotateLegRX = 10, stepRotateLowerLegRX = 10;
 int stepStab = 3;
-float rotateBodyY = 0, stepRotateBodyY = 0.25, rotateAss = 0.0, stepRotateAss = 0.20, translateJumping = 0.0, stepJumping = 0.50;
+float rotateBodyY = 0, stepRotateBodyY = 0.25, rotateAss = 0.0, stepRotateAss = 0.20, translateJumping = 0.0, stepJumping = 0.50, translateFlying = 0;
 int stepWalking = 2;
 int swordLength = 0;
 
 void reset()
 {
-	draw_spike = false, draw_bolt = false, draw_sword = false, walking = false, stab = false;
+	draw_spike = false, draw_bolt = false, draw_sword = false, walking = false, stab = false, assing = false, jumping = false, flying = false;
 	raise_Spike = -9.0, boltheight = 0.0, boltradius = 0.74;
 	headAngle1 = 180.0f;
 	fingersAngle = 150.0f;
@@ -69,7 +70,7 @@ void reset()
 	stepRotateArmLX = 10, stepRotateForeArmLX = 10, stepRotateArmLZ = 10, stepRotateArmRX = 10, stepRotateForeArmRX = 10, stepRotateArmRZ = 10;
 	stepRotateLegLX = 10, stepRotateLowerLegLX = 10, stepRotateLegRX = 10, stepRotateLowerLegRX = 10;
 	stepStab = 3;
-	rotateBodyY = 0, stepRotateBodyY = 0.25;
+	rotateBodyY = 0, stepRotateBodyY = 0.25, rotateAss = 0.0, stepRotateAss = 0.20, translateJumping = 0.0, stepJumping = 0.50, translateFlying = 0;
 	stepWalking = 2;
 }
 
@@ -396,7 +397,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				rotateArmRX = 90;
 				rotateArmLZ = 90;
 				rotateArmRZ = 90;
-			}	
+			}
 			break;
 		}
 		case 'X':
@@ -407,6 +408,30 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				reset();
 				jumping = true;
 			}
+			break;
+		}
+		case 'C':
+		{
+			flying = !flying;
+			if (flying)
+			{
+				reset();
+				flying = true;
+				rotateArmLZ = 70;
+				rotateArmRZ = 70;
+			}
+			break;
+		}
+		case 'V':
+		{
+			if (flying)
+				translateFlying += 0.1;
+			break;
+		}
+		case 'B':
+		{
+			if (flying && translateFlying >= 2.0)
+				translateFlying -= 0.1;
 			break;
 		}
 		}
@@ -462,7 +487,7 @@ void display()
 
 	glLoadIdentity();
 
-	gluLookAt(camX, camY, camZ, lookX, lookY, lookZ, 0.0, 1.0, 0.0);
+	gluLookAt(camX, camY, camZ, lookX, lookY + translateFlying, lookZ, 0.0, 1.0, 0.0);
 
 	glRotatef(rotateX, 1, 0, 0);
 	glRotatef(rotateY, 0, 1, 0);
@@ -504,7 +529,7 @@ void display()
 void drawRobot()
 {
 	glEnable(GL_TEXTURE_2D);
-	
+
 	if (walking)
 	{
 		translateZ -= 0.1;
@@ -548,7 +573,7 @@ void drawRobot()
 			rotateArmLZ += stepStab;
 			rotateBodyY -= stepRotateBodyY;
 		}
-		
+
 		if (rotateArmLX < 90)
 		{
 			rotateArmLX += 5;
@@ -556,7 +581,7 @@ void drawRobot()
 		}
 	}
 	else
-	{		
+	{
 		if (rotateBodyY < 0)
 		{
 			rotateBodyY += stepRotateBodyY;
@@ -575,9 +600,9 @@ void drawRobot()
 			stepRotateForeArmLX = -stepRotateForeArmLX;
 			stepRotateForeArmRX = -stepRotateForeArmRX;
 		}
-		rotateForeArmLX += stepRotateForeArmLX/3;
-		rotateForeArmRX += stepRotateForeArmRX/3;
-	}	
+		rotateForeArmLX += stepRotateForeArmLX / 3;
+		rotateForeArmRX += stepRotateForeArmRX / 3;
+	}
 
 	if (jumping)
 	{
@@ -591,25 +616,42 @@ void drawRobot()
 			stepRotateLowerLegRX = -stepRotateLowerLegRX;
 			stepJumping = -stepJumping;
 		}
-		rotateArmLZ += stepRotateArmLZ/2;
-		rotateArmRZ += stepRotateArmRZ/2;
-		rotateLegLX += stepRotateLegLX/2;
-		rotateLegRX += stepRotateLegRX/2;
-		rotateLowerLegLX += stepRotateLowerLegLX/2;
-		rotateLowerLegRX += stepRotateLowerLegRX/2;
+		rotateArmLZ += stepRotateArmLZ / 2;
+		rotateArmRZ += stepRotateArmRZ / 2;
+		rotateLegLX += stepRotateLegLX / 2;
+		rotateLegRX += stepRotateLegRX / 2;
+		rotateLowerLegLX += stepRotateLowerLegLX / 2;
+		rotateLowerLegRX += stepRotateLowerLegRX / 2;
 		translateJumping += stepJumping;
+	}
+
+	if (flying)
+	{
+		if (translateFlying < 2.0)
+			translateFlying += 0.1;
+	}
+	else if (translateFlying > 0)
+	{
+		translateFlying -= 0.1;
+		if (rotateArmLZ > 0 || rotateArmRZ > 0)
+		{
+			rotateArmLZ -= 2;
+			rotateArmRZ -= 2;
+		}
 	}
 
 	glPushMatrix();
 	{
 		if (jumping)
-			glTranslatef(0.0, -translateJumping + 3.0, -translateJumping/3);
+			glTranslatef(0.0, -translateJumping + 4.2, -translateJumping / 3);
+		if (flying || translateFlying > 0)
+			glTranslatef(0.0, translateFlying, 0.0);
 		glRotatef(rotateBodyY, 0, 1, 0);
 
 		glPushMatrix();
 		{
 			glTranslatef(0, 3.0, 0);
-			glRotatef(-rotateAss/3, 0, 0, 1);
+			glRotatef(-rotateAss / 3, 0, 0, 1);
 			glTranslatef(0, -3.0, 0);
 			glScalef(1.1, 1.2, 1.1);
 			drawLegs();
@@ -1051,7 +1093,7 @@ void drawTurbo()
 			glBindTexture(GL_TEXTURE_2D, turboOuterTexture);
 			gluSphere(mqo, 0.07, slices, stacks);
 		}
-		glPopMatrix();		
+		glPopMatrix();
 	}
 	glPopMatrix();
 
@@ -2035,23 +2077,17 @@ void drawLeftHand() {
 	// draw sword
 	drawSword();
 
-
-	glPushMatrix();
+	if (flying)
 	{
 		glPushMatrix();
 		{
-			glPushMatrix();
-			{
-				glTranslatef(-1.1, 0.0, 0.0);
-				glRotatef(90, 0, 1, 0);
-				glBindTexture(GL_TEXTURE_2D, blueFlameTexture);
-				gluCylinder(mqo, 0.0, 0.2, 1.0, slices, stacks);
-			}
-			glPopMatrix();
+			glTranslatef(-1.1, 0.0, 0.0);
+			glRotatef(90, 0, 1, 0);
+			glBindTexture(GL_TEXTURE_2D, blueFlameTexture);
+			gluCylinder(mqo, 0.0, 0.2, 1.0, slices, stacks);
 		}
 		glPopMatrix();
 	}
-	glPopMatrix();
 }
 
 void drawSword() {
@@ -2136,6 +2172,11 @@ void drawSwordBlade()
 		drawFilledCube();
 	}
 	glPopMatrix();
+}
+
+void drawSword2()
+{
+
 }
 
 void drawArmRight()
@@ -2373,7 +2414,7 @@ void drawRightHand() {
 			glPushMatrix();
 			{
 				glTranslatef(0.0f, 0.0f, -0.09f);
-				glPushMatrix(); 
+				glPushMatrix();
 				{
 					glTranslatef(0.10f, -0.07f, -0.05f);
 					glRotatef(-10.0f, 0.0f, 0.0f, 1.0f);
@@ -2381,7 +2422,7 @@ void drawRightHand() {
 					drawCover();
 				}
 				glPopMatrix();
-				glPushMatrix(); 
+				glPushMatrix();
 				{
 					glScalef(1.0f, -1.0f, 1.0f);
 					glTranslatef(0.10f, -0.07f, -0.05f);
@@ -2391,7 +2432,7 @@ void drawRightHand() {
 				}
 				glPopMatrix();
 
-				glPushMatrix(); 
+				glPushMatrix();
 				{
 					glTranslatef(0.13f, 0.0f, -0.05f);
 					glScalef(0.025f, 0.07f, 0.05f);
@@ -2399,7 +2440,7 @@ void drawRightHand() {
 				}
 				glPopMatrix();
 
-				glPushMatrix(); 
+				glPushMatrix();
 				{
 					glTranslatef(0.05f, 0.0f, -0.03f);
 					glScalef(0.06f, 0.06f, 0.02f);
@@ -2407,7 +2448,7 @@ void drawRightHand() {
 				}
 				glPopMatrix();
 
-				glPushMatrix(); 
+				glPushMatrix();
 				{
 					glTranslatef(0.0f, -0.15f, -0.05f);
 					glRotatef(60.0f, 1.0f, 0.0f, 0.0f);
@@ -2416,7 +2457,7 @@ void drawRightHand() {
 					drawCover();
 				}
 				glPopMatrix();
-				glPushMatrix(); 
+				glPushMatrix();
 				{
 					glScalef(1.0f, -1.0f, 1.0f);
 					glTranslatef(0.0f, -0.15f, -0.05f);
@@ -2426,7 +2467,7 @@ void drawRightHand() {
 					drawCover();
 				}
 				glPopMatrix();
-				glPushMatrix(); 
+				glPushMatrix();
 				{
 					glTranslatef(-0.1f, 0.0f, -0.08f);
 					glScalef(0.10f, 0.10f, 0.02f);
@@ -2492,22 +2533,18 @@ void drawRightHand() {
 		glPopMatrix();
 	}
 	glPopMatrix();
-	glPushMatrix();
+
+	if (flying)
 	{
 		glPushMatrix();
 		{
-			glPushMatrix();
-			{
-				glTranslatef(1.1, 0.0, 0.0);
-				glRotatef(-90, 0, 1, 0);
-				glBindTexture(GL_TEXTURE_2D, blueFlameTexture);
-				gluCylinder(mqo, 0.0, 0.2, 1.0, slices, stacks);
-			}
-			glPopMatrix();
+			glTranslatef(1.1, 0.0, 0.0);
+			glRotatef(-90, 0, 1, 0);
+			glBindTexture(GL_TEXTURE_2D, blueFlameTexture);
+			gluCylinder(mqo, 0.0, 0.2, 1.0, slices, stacks);
 		}
 		glPopMatrix();
 	}
-	glPopMatrix();
 }
 
 void drawTripleCover() {
@@ -2624,7 +2661,7 @@ void drawFinger(float fingerAngle) {
 			glTranslatef(0.0f, 0.0f, -0.1f); //Switch origin to prefered rotate point.
 			glRotatef(fingerAngle, 0.0f, 1.0f, 0.0f); //Rotating joint.
 			radius = 0.5f;
-			drawHingeJoint(radius); 
+			drawHingeJoint(radius);
 			glPushMatrix();
 			{
 				glBindTexture(GL_TEXTURE_2D, skeletonTextureArr[texCount]);
@@ -2694,7 +2731,7 @@ void drawFinger(float fingerAngle) {
 						{
 							glScalef(0.7f, 0.5f, 0.7f);
 
-							glPushMatrix(); 
+							glPushMatrix();
 							{
 								glBindTexture(GL_TEXTURE_2D, armourTextureArr[texCount]);
 								glTranslatef(-0.15f, 0.0f, 0.0f);
@@ -2855,19 +2892,22 @@ void drawOneLeg(int rotateLowerLegX) {
 			}
 			glPopMatrix();
 
-			// foot flame
-			glPushMatrix();
+			if (flying)
 			{
-				glTranslatef(0.0, -2.15, 0.0);
+				// foot flame
 				glPushMatrix();
 				{
-					glRotatef(-90, 1, 0, 0);
-					glBindTexture(GL_TEXTURE_2D, blueFlameTexture);
-					gluCylinder(mqo, 0.0, 0.5, 2.15, slices, stacks);
+					glTranslatef(0.0, -2.15, 0.0);
+					glPushMatrix();
+					{
+						glRotatef(-90, 1, 0, 0);
+						glBindTexture(GL_TEXTURE_2D, blueFlameTexture);
+						gluCylinder(mqo, 0.0, 0.5, 2.15, slices, stacks);
+					}
+					glPopMatrix();
 				}
 				glPopMatrix();
 			}
-			glPopMatrix();
 		}
 		glPopMatrix();
 
@@ -3150,7 +3190,7 @@ void drawOneLeg(int rotateLowerLegX) {
 			gluCylinder(mqo, 0.35, 0.35, 3.6, slices, stacks);
 		}
 		glPopMatrix();
-		
+
 		// upper leg ball joint
 		glPushMatrix();
 		{
@@ -4726,7 +4766,7 @@ void drawSpike()
 {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, earthTexture);
-	
+
 	if (!draw_spike && raise_Spike > -9.0)
 	{
 		raise_Spike -= 0.6;
@@ -4949,7 +4989,7 @@ void drawBolt()
 }
 
 void setPerspective()
-{	
+{
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	if (!switch_perspective)
@@ -4970,7 +5010,7 @@ void drawBg()
 
 	glPushMatrix();
 	{
-		glTranslatef(0.0, 2.5, 0.0);
+		glTranslatef(0.0, 3.77, 0.0);
 		glScalef(4.0, 4.0, 4.0);
 		glPushMatrix();
 		{
